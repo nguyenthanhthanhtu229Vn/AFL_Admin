@@ -1,0 +1,172 @@
+.manage {
+  padding: 30px;
+  margin-left: 310px;
+  margin-top: -20px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title__left {
+  font-size: 32px;
+}
+
+.another__location {
+  color: var(--green-bold);
+}
+
+.title__location span {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.search {
+  margin-top: 30px;
+}
+
+.search__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search__top span {
+  font-size: 16px;
+  font-family: "Mulish-Regular";
+}
+
+.search__top select {
+  padding: 10px 30px;
+  font-family: "Mulish-Regular";
+  outline: none;
+  font-size: 18px;
+}
+
+.search__bot {
+  margin-top: 30px;
+  position: relative;
+  padding-right: 40px;
+}
+
+.search__bot input {
+  width: 100%;
+  padding: 20px;
+  font-size: 18px;
+  font-family: "Mulish-Regular";
+  outline: none;
+  border: none;
+  background-color: var(--blue-black);
+  color: var(--white-text);
+}
+
+.search__bot i {
+  position: absolute;
+  right: 20px;
+  font-size: 18px;
+  top: 20px;
+}
+
+.accountList {
+  margin-top: 30px;
+  background-color: var(--blue-black);
+  padding-bottom: 40px;
+}
+
+.accountList table {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.accountList table th,
+.accountList table td {
+  padding: 30px 15px;
+  font-size: 18px;
+}
+.accountList tr {
+  text-align: center;
+  position: relative;
+}
+
+.accountList tr::after {
+  display: block;
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: 96%;
+  background-color: #ccc;
+  bottom: 0;
+  left: 15px;
+  right: 30px;
+}
+.accountList td:first-child,
+.accountList th:first-child {
+  text-align: left;
+}
+
+.accountList table th {
+  font-family: "Mulish-Bold";
+}
+
+/* PagingTournament */
+
+.pagingTournament {
+  width: max-content;
+  margin: 0 auto;
+  margin-top: 20px;
+  /* margin-bottom: 30px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagelink {
+  color: var(--white-text);
+  display: inline-block;
+  padding: 10px 15px;
+}
+
+.pageItem:hover .pagelink {
+  color: var(--blue-black);
+}
+.pageItem {
+  margin-top: 15px;
+  margin-left: 20px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: max-content;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.pageItem.active,
+.pageItem:hover {
+  background-color: var(--green-bold);
+  color: var(--black-text);
+  border: 1px solid transparent;
+}
+
+/* =========== */
+.view {
+  text-align: center;
+  display: inline-block;
+  width: 50px;
+  background-color: var(--green-bold);
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.view:hover,.block:hover{
+    filter: brightness(85%);
+}
+.block {
+  display: inline-block;
+  width: 50px;
+  margin-left: 20px;
+  text-align: center;
+  background-color: #d9105c;
+  padding: 10px 20px;
+  transition: 0.5s;
+  border-radius: 5px;
+}
