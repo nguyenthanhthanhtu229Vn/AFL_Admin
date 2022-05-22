@@ -200,8 +200,8 @@
 
 .descriptionTeam {
   font-size: 16px;
-  margin-bottom: 15px;
-  max-height: 15px;
+  margin-bottom: 20px;
+  height: 18px;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   display: -webkit-box;

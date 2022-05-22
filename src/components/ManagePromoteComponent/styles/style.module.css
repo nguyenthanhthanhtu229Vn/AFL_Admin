@@ -1,0 +1,237 @@
+.manage {
+    padding: 30px;
+    margin-left: 310px;
+    margin-top: -20px;
+  }
+  
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title__left {
+    font-size: 32px;
+  }
+  
+  .another__location {
+    color: var(--green-bold);
+  }
+  
+  .title__location span {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .content__wrap {
+    margin-top: 30px;
+    display: flex;
+    column-gap: 30px;
+  }
+  
+  .content__left {
+    background-color: var(--blue-black);
+    padding: 20px 15px;
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+  }
+    
+  .content__left a {
+    margin-bottom: 20px;
+    font-size: 16px;
+    transition: 0.5s;
+  }
+  
+  .content__left a:hover {
+    color: var(--green-bold);
+  }
+  .content__left a i {
+    margin-right: 15px;
+  }
+  
+  .content__left p {
+    margin-top: 15px;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .content__left p::before {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: #ccc;
+    margin-bottom: 20px;
+  }
+  
+  .content__left span {
+    margin-right: 15px;
+  }
+  .green {
+    display: inline-block;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: var(--green-bold);
+  }
+  .red {
+    display: inline-block;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: #ea6061;
+  }
+  .yellow {
+    display: inline-block;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: #ffa550;
+  }
+  
+  .search__bot {
+    position: relative;
+    padding-right: 40px;
+    width: 100%;
+  }
+  
+  .search__bot input {
+    width: 100%;
+    padding: 20px;
+    font-size: 18px;
+    font-family: "Mulish-Regular";
+    outline: none;
+    border: none;
+    background-color: var(--blue-black);
+    color: var(--white-text);
+  }
+  
+  .search__bot i {
+    position: absolute;
+    right: 20px;
+    font-size: 18px;
+    top: 20px;
+  }
+  
+  .content__right{
+    width: 100%;
+    margin-right: 40px;
+  }
+  
+  .main__content{
+    background-color: var(--blue-black);
+    margin-top: 30px;
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .option{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .option::after{
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    position: absolute;
+    bottom: -20px;
+  }
+   input[type=checkbox]{
+   display: none;
+  }
+  label::after{
+    display: block;
+    content: "";
+    position: absolute;
+  }
+  input:checked + label::after{
+    display: block;
+    content: "X";
+    top: 0px;
+    left: 2px;
+    font-size: 16px;
+    font-family: "Mulish-Bold"; 
+  }
+  .main__content label{
+    display: inline-block;
+    width: 15px;
+    position: relative;
+    margin-right: 10px;
+    height: 15px;
+    border: 2px solid var(--white-text);
+    cursor: pointer;
+  }
+  
+  .selectAll{
+    display: flex;
+    align-items: center;
+  }
+  
+  .list img{
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+  }
+  
+  .item{
+    display: flex;
+    justify-content: space-between;
+    height: 110px;
+    position: relative;
+    margin-bottom: 30px;
+  }
+  
+  .item::after{
+    position: absolute;
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #fff;
+    bottom: -10px;
+  }
+  .item label{
+    display: block;
+    margin: 20px auto;
+  }
+  
+  .item .mid{
+    margin-left: 10px;
+    width: max-content;
+    text-align: left;
+    width: 680px;
+    line-height: 1.1;
+  }
+  
+  .item .mid h3{
+    font-family: "Mulish-Bold";
+    margin-bottom: 10px;
+  }
+   
+  .item .mid p{
+    margin-bottom: 10px;
+  }
+  
+  .item  .right i{
+    display: block;
+    margin-top: 40px;
+    margin-left: calc(100% - 20px);
+  }
+  
+  .item .right {
+    width: 80px;
+  }
+  .item .right span{
+    margin-right: 10px;
+    /* width: max-content; */
+  }
+
+  .option_right{
+    display: flex;
+    column-gap: 20px;
+  }

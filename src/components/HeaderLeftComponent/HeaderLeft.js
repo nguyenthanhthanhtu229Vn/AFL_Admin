@@ -1,14 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { getAPI } from "../../api";
 import styles from "./styles/style.module.css";
-function HeaderLeft() {
+function HeaderLeft(id) {
   const location = useLocation();
   const [activeMenu, setactiveMenu] = useState(location.pathname);
   const [openManage, setOpenManage] = useState(true);
   const [openReport, setOpenReport] = useState(true);
   const [openExten, setOpenExten] = useState(true);
+  const [clickUserMenu, setClickUserMenu] = useState(false);
+ const [myAccount, setMyAccount] = useState( JSON.parse(localStorage.getItem("userInfo")))
+  const [user, setUser] = useState("")
+    //Get User
+    const getUserById = async () => {
+      let afterDefaultURL = `users/${myAccount.userVM.id}`;
+      let response = getAPI(afterDefaultURL);
+      response
+        .then((res) => {
+          setUser(res.data);
+        })
+        .catch((err) => console.error(err));
+    };
+  // signout
+  const signout = () => {
+    localStorage.removeItem("userInfo");
+    window.location.reload();
+  };
   useEffect(() => {
     setactiveMenu(location.pathname);
+    getUserById();
   }, [location]);
   return (
     <div className={styles.headerAll}>
@@ -54,7 +74,10 @@ function HeaderLeft() {
                   to={"/manageTournament"}
                   onClick={() => setactiveMenu("/manageTournament")}
                   className={
-                    activeMenu === "/manageTournament" ? styles.active : ""
+                    activeMenu === "/manageTournament" ||
+                    activeMenu === `/tourDetail/${id.id}`
+                      ? styles.active
+                      : ""
                   }
                 >
                   Quản lý giải đấu
@@ -62,7 +85,12 @@ function HeaderLeft() {
                 <Link
                   to={"/manageTeam"}
                   onClick={() => setactiveMenu("/manageTeam")}
-                  className={activeMenu === "/manageTeam" ? styles.active : ""}
+                  className={
+                    activeMenu === "/manageTeam" ||
+                    activeMenu === `/teamDetail/${id.id}`
+                      ? styles.active
+                      : ""
+                  }
                 >
                   Quản lý đội bóng
                 </Link>
@@ -70,10 +98,22 @@ function HeaderLeft() {
                   to={"/manageAccount"}
                   onClick={() => setactiveMenu("/manageAccount")}
                   className={
-                    activeMenu === "/manageAccount" ? styles.active : ""
+                    activeMenu === "/manageAccount" ||
+                    activeMenu === `/accountDetail/${id.id}`
+                      ? styles.active
+                      : ""
                   }
                 >
                   Quản lý tài khoản
+                </Link>
+                <Link
+                  to={"/managePromote"}
+                  onClick={() => setactiveMenu("/managePromote")}
+                  className={
+                    activeMenu === "/managePromote" ? styles.active : ""
+                  }
+                >
+                  Quản lý thăng cấp
                 </Link>
                 <Link
                   to={"/manageReport"}
@@ -82,7 +122,7 @@ function HeaderLeft() {
                     activeMenu === "/manageReport" ? styles.active : ""
                   }
                 >
-                  Quản lý report
+                  Quản lý báo cáo
                 </Link>
               </>
             ) : null}
@@ -127,7 +167,7 @@ function HeaderLeft() {
             </p>
             {openExten ? (
               <>
-                <a href="#">Lịch</a>
+                <a href="#">Cấu hình</a>
                 <a href="#">Hộp thư</a>
               </>
             ) : null}
@@ -137,13 +177,28 @@ function HeaderLeft() {
       <div className={styles.headerRight}>
         <i class="fa-regular fa-bell"></i>
         <div className={styles.right}>
-          <div className={styles.myAccount}>
+          <div
+            className={styles.myAccount}
+            onClick={() => setClickUserMenu(!clickUserMenu)}
+          >
             <img
-              src="https://scontent.fsgn4-1.fna.fbcdn.net/v/t39.30808-6/274166188_1923462711159734_6796055857826196805_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=i3_zmlwthCgAX8-c-Y0&_nc_ht=scontent.fsgn4-1.fna&oh=00_AT9FqaWwL1G8NF6aN9WBVFwHCiCutvvNghB4dSbg7uqevQ&oe=628BD073"
-              alt="img"
+              src={user.avatar}
+              alt={user.username}
             />
-            <p>Nguyễn Thanh Thanh Tú</p>
+            <p>{user.username}</p>
             <i className="fa-solid fa-caret-down"></i>
+          </div>
+          <div
+            className={
+              clickUserMenu
+                ? `${styles.popup_down} ${styles.active}`
+                : styles.popup_down
+            }
+          >
+            <Link to={"/profile"}>Hồ sơ</Link>
+            <a href="#" onClick={signout}>
+              Đăng xuất
+            </a>
           </div>
         </div>
       </div>

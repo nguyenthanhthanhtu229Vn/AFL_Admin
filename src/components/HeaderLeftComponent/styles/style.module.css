@@ -80,12 +80,14 @@ a{
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 1px solid var(--white-text);
+    object-fit: cover;
 }
 .right{
     display: flex;
     align-items: center;
     column-gap: 30px;
+    position: relative;
+    user-select: none;
 }
 
 .headerRight i{
@@ -98,11 +100,42 @@ a{
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     display: -webkit-box;
-    /* height: 19px; */
+    height: 18px;
+    margin-right: 20px;
     max-width: 150px;
     overflow: hidden;
 }
 
 .myAccount i:last-child{
     margin-left: -15px;
+}
+
+.popup_down{
+    border-top: 1px solid #fff;
+    position: absolute;
+    bottom: -92px;
+    right: 0px;
+    width: 200px;
+    background-color: var(--blue-black);
+    display: none;
+
+}
+
+.popup_down.active{
+    display: block;
+}
+.popup_down a{
+    text-align: right;
+    padding: 10px 20px;
+    display: block;
+    font-family: "Mulish-Bold";
+}
+
+
+.popup_down a:hover{
+    color: var(--green-bold);
+}
+
+.popup_down a:not(:last-child){
+    border-bottom: 1px solid #fff;
 }

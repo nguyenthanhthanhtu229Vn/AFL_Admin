@@ -1,9 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
+import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 function ManageAccount() {
+  const [account, setAccount] = useState([]);
+  const getAccount = () => {
+    let afterDefaultURL = `users?page-offset=2&limit=5`;
+    let response = getAPI(afterDefaultURL);
+    response
+      .then((res) => {
+        setAccount(res.data.users);
+      })
+      .catch((err) => console.error(err));
+  };
+
+    // format Date
+    const formatDate = (date) => {
+      const day = new Date(date);
+      return (
+        String(day.getDate()).padStart(2, "0") +
+        "/" +
+        String(day.getMonth() + 1).padStart(2, "0") +
+        "/" +
+        day.getFullYear()
+      );
+    };
+  useEffect(() => {
+    getAccount();
+  }, []);
+
   return (
     <>
       <ScrollToTop />
@@ -12,13 +40,13 @@ function ManageAccount() {
         <div className={styles.title}>
           <h2 className={styles.title__left}>Quản lý tài khoản</h2>
           <div className={styles.title__location}>
-            <a href="#" className={styles.another__location}>
+            <Link to={"/"} className={styles.another__location}>
               <i className="fa-solid fa-house"></i> Trang chủ
-            </a>
+            </Link>
             <span>{">>"}</span>
-            <a href="#" className="current__location">
-              Quản lý giải đấu
-            </a>
+            <Link to={"/manageAccount"} className="current__location">
+              Quản lý tài khoản
+            </Link>
           </div>
         </div>
         <div className={styles.search}>
@@ -42,91 +70,27 @@ function ManageAccount() {
               <th>STT</th>
               <th>Họ tên</th>
               <th>Giới tính</th>
-              <th>Ngày sinh</th>
               <th>Ngày tạo tài khoản</th>
               <th>Email</th>
               <th>Chức năng</th>
             </tr>
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Thanh Thanh Tú</td>
-              <td>Nam</td>
-              <td>22/09/2000</td>
-              <td>19/08/2019</td>
-              <td>tnn22@gmail.com</td>
-              <td>
-                <a href="#" className={styles.view}>
-                  Xem
-                </a>
-                <a href="#" className={styles.block}>
-                  Chặn
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Nguyễn Thanh Thanh Tú</td>
-              <td>Nam</td>
-              <td>22/09/2000</td>
-              <td>19/08/2019</td>
-              <td>tnn22@gmail.com</td>
-              <td>
-                <a href="#" className={styles.view}>
-                  Xem
-                </a>
-                <a href="#" className={styles.block}>
-                  Chặn
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Nguyễn Thanh Thanh Tú</td>
-              <td>Nam</td>
-              <td>22/09/2000</td>
-              <td>19/08/2019</td>
-              <td>tnn22@gmail.com</td>
-              <td>
-                <a href="#" className={styles.view}>
-                  Xem
-                </a>
-                <a href="#" className={styles.block}>
-                  Chặn
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Nguyễn Thanh Thanh Tú</td>
-              <td>Nam</td>
-              <td>22/09/2000</td>
-              <td>19/08/2019</td>
-              <td>tnn22@gmail.com</td>
-              <td>
-                <a href="#" className={styles.view}>
-                  Xem
-                </a>
-                <a href="#" className={styles.block}>
-                  Chặn
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Nguyễn Thanh Thanh Tú</td>
-              <td>Nam</td>
-              <td>22/09/2000</td>
-              <td>19/08/2019</td>
-              <td>tnn22@gmail.com</td>
-              <td>
-                <a href="#" className={styles.view}>
-                  Xem
-                </a>
-                <a href="#" className={styles.block}>
-                  Chặn
-                </a>
-              </td>
-            </tr>
+            {account.map((item,index) => (
+              <tr>
+                <td>{index+1}</td>
+                <td>{item.username}</td>
+                <td>{item.gender==="Male"?"Nam":"Nữ"}</td>
+                <td>{formatDate(item.dateCreate)}</td>
+                <td>{item.email}</td>
+                <td>
+                  <Link to={`/accountDetail/${item.id}`} className={styles.view}>
+                    Xem
+                  </Link>
+                  <a href="#" className={styles.block}>
+                    Chặn
+                  </a>
+                </td>
+              </tr>
+            ))}
           </table>
           <ReactPaginate
             previousLabel={"Trang trước"}
