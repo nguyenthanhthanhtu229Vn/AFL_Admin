@@ -4,9 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import axios from "axios";  
+import axios from "axios";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import { toast } from "react-toastify";
+import LoadingAction from "../LoadingComponent/LoadingAction";
 function Login() {
   const firebaseConfig = {
     apiKey: "AIzaSyCYXpUYy_KK1FjtBjz19gY2QTWi4sBcsgU",
@@ -26,6 +27,7 @@ function Login() {
     setPasswordShown(!passwordShown);
   };
 
+  const [loading, setloading] = useState(false);
   const [newAcc, setNewAcc] = useState(false);
   let navigate = useNavigate();
   const [inputValues, setInputValues] = useState({
@@ -71,6 +73,7 @@ function Login() {
         setPasswordErr("");
       }
 
+      setloading(true);
       const data = {
         email: inputValues.username,
         password: inputValues.password,
@@ -82,12 +85,12 @@ function Login() {
           headers: { "Content-Type": "application/json" },
         }
       );
-      if(response.data.userVM.roleId===1){
+      if (response.data.userVM.roleId === 1) {
         localStorage.setItem("userInfo", JSON.stringify(response.data));
         window.location.reload();
-        navigate("../home", { replace: true }); 
-      }
-      else{
+        setloading(false);
+        navigate("../home", { replace: true });
+      } else {
         toast.error("Bạn không phải là admin", {
           position: "top-right",
           autoClose: 3000,
@@ -97,9 +100,9 @@ function Login() {
           draggable: true,
           progress: undefined,
         });
+        setloading(false);
       }
     } catch (err) {
-      console.log(err);
       console.log(err.response.data);
       if (err.response.data === "Tài khoản không tồn tại") {
         setUserNameErr(err.response.data);
@@ -109,6 +112,7 @@ function Login() {
         setUserNameErr("");
         setPasswordErr(err.response.data);
       }
+      setloading(false);
     }
   };
 
@@ -132,6 +136,7 @@ function Login() {
   return (
     <div className={styles.login}>
       <ScrollToTop />
+      {loading ? <LoadingAction /> : null}
       <div className={styles.container__wrap}>
         <div className={styles.login__sub}>
           <img

@@ -5,9 +5,11 @@ import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
+import LoadingAction from "../LoadingComponent/LoadingAction";
 function ManageTournament() {
   const [openGrid, setOpenGrid] = useState(true);
 
+  const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
   const [check, setCheck] = useState(false);
@@ -26,13 +28,14 @@ function ManageTournament() {
   };
 
   const getTournament = (nameFind, currentPage, anotherSearch, value) => {
+    setloading(true);
     let afterDefaultURL = null;
     if (anotherSearch === "NAME") {
       afterDefaultURL = `tournaments?tournament-name=${nameFind}&order-by=${orderBy}&order-type=${orderType}&page-offset=${currentPage}&limit=6`;
     }
     if (anotherSearch === "SORT") {
       const fullOrder = value.split("-");
-      console.log(fullOrder)
+      console.log(fullOrder);
       afterDefaultURL = `tournaments?tournament-name=${nameFind}&order-by=${fullOrder[0]}&order-type=${fullOrder[1]}&page-offset=${currentPage}&limit=6`;
     }
     let response = getAPI(afterDefaultURL);
@@ -41,8 +44,12 @@ function ManageTournament() {
         setTournament(res.data.tournaments);
         setCountList(res.data.countList);
         setCount(res.data.countList);
+        setloading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setloading(false);
+      });
   };
 
   useEffect(() => {
@@ -121,6 +128,7 @@ function ManageTournament() {
   return (
     <>
       <ScrollToTop />
+      {loading ? <LoadingAction /> : null}
       <HeaderLeft />
       <div className={styles.manage}>
         <div className={styles.title}>
@@ -181,29 +189,43 @@ function ManageTournament() {
               openGrid ? styles.teamList : `${styles.teamList} ${styles.active}`
             }
           >
-            {tournament.map((item) => (
-              <Link to={`/tourDetail/${item.id}`} className={styles.teamItem} key={item.id}>
-                <div className={styles.itemImage}>
-                  <img src={item.tournamentAvatar} alt={item.tournamentName} />
-                </div>
-                <div className={styles.itemText}>
-                  <div className={styles.nameTeam}>{item.tournamentName}</div>
-                  <div className={styles.descriptionTeam}>
-                    {getType(item.tournamentTypeId)}
-                    {item.footballFieldAddress !== ""
-                      ? " | " + splitTeamArea(item.footballFieldAddress)
-                      : ""}
+            {tournament.length !== 0 ? (
+              tournament.map((item) => (
+                <Link
+                  to={`/tourDetail/${item.id}`}
+                  className={styles.teamItem}
+                  key={item.id}
+                >
+                  <div className={styles.itemImage}>
+                    <img
+                      src={item.tournamentAvatar}
+                      alt={item.tournamentName}
+                    />
                   </div>
-                  <div className={styles.numberPlayer}>
-                    <i className="fa-solid fa-user-group"></i>
-                    <span>{item.numberTeamInTournament}</span>
+                  <div className={styles.itemText}>
+                    <div className={styles.nameTeam}>{item.tournamentName}</div>
+                    <div className={styles.descriptionTeam}>
+                      {getType(item.tournamentTypeId)}
+                      {item.footballFieldAddress !== ""
+                        ? " | " + splitTeamArea(item.footballFieldAddress)
+                        : ""}
+                    </div>
+                    <div className={styles.numberPlayer}>
+                      <i className="fa-solid fa-user-group"></i>
+                      <span>{item.numberTeamInTournament}</span>
+                    </div>
+                    <Link
+                      to={`/tourDetail/${item.id}`}
+                      className={styles.viewDetail}
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i>Xem thêm
+                    </Link>
                   </div>
-                  <a href="#" className={styles.viewDetail}>
-                    <i class="fa-solid fa-pen-to-square"></i>Xem thêm
-                  </a>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))
+            ) : (
+              <p className={styles.noItem}>Không tìm thấy giải đấu</p>
+            )}
           </div>
           <ReactPaginate
             previousLabel={"Trang trước"}

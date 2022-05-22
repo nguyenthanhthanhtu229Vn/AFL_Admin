@@ -3,11 +3,13 @@ import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
+import LoadingAction from "../LoadingComponent/LoadingAction";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 function ManageTeam() {
   const [openGrid, setOpenGrid] = useState(true);
 
+  const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
   const [check, setCheck] = useState(false);
@@ -26,6 +28,7 @@ function ManageTeam() {
   };
 
   const getTeam = (nameFind, currentPage, anotherSearch, value) => {
+    setloading(true);
     let afterDefaultURL = null;
     if (anotherSearch === "NAME") {
       afterDefaultURL = `teams?team-name=${nameFind}&order-by=${orderBy}&order-type=${orderType}&page-offset=${currentPage}&limit=8`;
@@ -40,8 +43,12 @@ function ManageTeam() {
         setTeam(res.data.teams);
         setCountList(res.data.countList);
         setCount(res.data.countList);
+        setloading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setloading(false);
+      });
   };
 
   useEffect(() => {
@@ -89,6 +96,7 @@ function ManageTeam() {
   return (
     <>
       <ScrollToTop />
+      {loading ? <LoadingAction /> : null}
       <HeaderLeft />
       <div className={styles.manage}>
         <div className={styles.title}>
@@ -147,32 +155,36 @@ function ManageTeam() {
               openGrid ? styles.teamList : `${styles.teamList} ${styles.active}`
             }
           >
-            {team.map((item) => (
-              <div className={styles.teamItem} key={item.id}>
-                <div className={styles.itemImage}>
-                  <img src={item.teamAvatar} alt={item.teamName} />
-                </div>
-                <div className={styles.itemText}>
-                  <div className={styles.nameTeam}>{item.teamName}</div>
-                  <div className={styles.descriptionTeam}>
-                    Bóng Đá {item.teamGender === "Male" ? "Nam" : "Nữ"}{" "}
-                    {item.teamArea !== ""
-                      ? "| " + splitTeamArea(item.teamArea)
-                      : ""}
+            {team.length !== 0 ? (
+              team.map((item) => (
+                <div className={styles.teamItem} key={item.id}>
+                  <div className={styles.itemImage}>
+                    <img src={item.teamAvatar} alt={item.teamName} />
                   </div>
-                  <div className={styles.numberPlayer}>
-                    <i className="fa-solid fa-user-group"></i>
-                    <span>10</span>
+                  <div className={styles.itemText}>
+                    <div className={styles.nameTeam}>{item.teamName}</div>
+                    <div className={styles.descriptionTeam}>
+                      Bóng Đá {item.teamGender === "Male" ? "Nam" : "Nữ"}{" "}
+                      {item.teamArea !== ""
+                        ? "| " + splitTeamArea(item.teamArea)
+                        : ""}
+                    </div>
+                    <div className={styles.numberPlayer}>
+                      <i className="fa-solid fa-user-group"></i>
+                      <span>10</span>
+                    </div>
+                    <Link
+                      to={`/teamDetail/${item.id}`}
+                      className={styles.viewDetail}
+                    >
+                      <i class="fa-solid fa-pen-to-square"></i>Xem thêm
+                    </Link>
                   </div>
-                  <Link
-                    to={`/teamDetail/${item.id}`}
-                    className={styles.viewDetail}
-                  >
-                    <i class="fa-solid fa-pen-to-square"></i>Xem thêm
-                  </Link>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className={styles.noItem}>Không tìm thấy đội bóng</p>
+            )}
           </div>
           <ReactPaginate
             previousLabel={"Trang trước"}

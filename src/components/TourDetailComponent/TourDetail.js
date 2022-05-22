@@ -84,7 +84,7 @@ function TourDetail() {
         <div className={styles.content}>
           <div>
             <div className={styles.content__left}>
-              <img src="/assets/img/homepage/a2.png" alt="khoa" />
+              <img src={tournament.tournamentAvatar} alt="khoa" />
               <div className={styles.function}>
                 <a href="#">Hủy giải đấu</a>
                 <a href="#">Xóa giải đấu</a>

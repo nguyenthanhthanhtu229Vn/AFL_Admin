@@ -85,6 +85,7 @@
   padding: 30px 15px;
   font-size: 18px;
 }
+
 .accountList tr {
   text-align: center;
   position: relative;
@@ -106,6 +107,9 @@
   text-align: left;
 }
 
+.accountList td:last-child,.accountList th:last-child{
+  width: 230px;
+}
 .accountList table th {
   font-family: "Mulish-Bold";
 }
@@ -157,9 +161,11 @@
   padding: 10px 20px;
   border-radius: 5px;
 }
+
 .view:hover,.block:hover{
     filter: brightness(85%);
 }
+
 .block {
   display: inline-block;
   width: 50px;
@@ -169,4 +175,8 @@
   padding: 10px 20px;
   transition: 0.5s;
   border-radius: 5px;
+}
+
+.noItem{
+  font-size: 18px;
 }
