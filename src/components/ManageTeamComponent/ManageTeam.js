@@ -171,7 +171,7 @@ function ManageTeam() {
                     </div>
                     <div className={styles.numberPlayer}>
                       <i className="fa-solid fa-user-group"></i>
-                      <span>10</span>
+                      <span>{item.numberPlayerInTeam}</span>
                     </div>
                     <Link
                       to={`/teamDetail/${item.id}`}
