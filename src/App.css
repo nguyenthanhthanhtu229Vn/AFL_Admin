@@ -243,3 +243,13 @@ table {
   width: auto;
   padding: 2px;
 }
+
+.Toastify__toast-body > div:last-child {
+  width: max-content !important;
+}
+
+.Toastify button{
+  margin-top: 10px !important;
+  padding: 0;
+  margin-left: 120px;
+}

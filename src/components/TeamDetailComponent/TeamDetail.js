@@ -185,16 +185,6 @@ function TeamDetail() {
                   value={team.numberPlayerInTeam}
                 />
               </div>
-              <div className={styles.text}>
-                <label htmlFor="bio">Mô tả đội bóng</label>
-                <input
-                  type="text"
-                  id="bio"
-                  placeholder="*Mô tả đội bóng"
-                  disabled
-                  value={team.description}
-                />
-              </div>
             </form>
             <Link to={"/manageTeam"} className={styles.button}>Hoàn tất</Link>
           </div>

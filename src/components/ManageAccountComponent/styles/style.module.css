@@ -108,7 +108,7 @@
 }
 
 .accountList td:last-child,.accountList th:last-child{
-  width: 230px;
+  width: 245px;
 }
 .accountList table th {
   font-family: "Mulish-Bold";
@@ -156,7 +156,7 @@
 .view {
   text-align: center;
   display: inline-block;
-  width: 50px;
+  width: 70px;
   background-color: var(--green-bold);
   padding: 10px 20px;
   border-radius: 5px;
@@ -168,15 +168,21 @@
 
 .block {
   display: inline-block;
-  width: 50px;
+  width:70px;
   margin-left: 20px;
   text-align: center;
   background-color: #d9105c;
   padding: 10px 20px;
   transition: 0.5s;
   border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .noItem{
   font-size: 18px;
+}
+
+.no_before_icon::before{
+  display: none !important;
 }

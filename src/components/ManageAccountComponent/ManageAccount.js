@@ -3,10 +3,16 @@ import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
-import LoadingAction from "../LoadingComponent/LoadingAction"
+import LoadingAction from "../LoadingComponent/LoadingAction";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
+import SweetAlert from "sweetalert2-react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import axios from "axios";
+import { toast } from "react-toastify";
 function ManageAccount() {
+  const MySwal = withReactContent(Swal);
   const [account, setAccount] = useState([]);
   const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +23,6 @@ function ManageAccount() {
   const [sort, setSort] = useState("");
   const [orderBy, setOrderBy] = useState("DateCreate");
   const [orderType, setOrderType] = useState("DESC");
-
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
     getAccount(contentSearch, data.selected + 1, "NAME", contentSearch);
@@ -48,6 +53,58 @@ function ManageAccount() {
       });
   };
 
+
+  const HandleClick = (status,id) => {
+    Swal.fire({
+      title: "Bạn chắc chứ?",
+      text: status ? "Chặn tài khoản này" : "Bỏ chặn tài khoản",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5fe37d",
+      cancelButtonColor: "#b80e4e",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      customClass: {
+        icon: styles.no_before_icon,
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        changeStatusUser(id)
+      }
+    });
+  };
+
+  const changeStatusUser = async (id) => {
+    try {
+      const response = await axios.patch(
+        `https://afootballleague.ddns.net/api/v1/users/${id}`
+      );
+      if (response.status === 200) {
+        toast.success("Thành công", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setCheck(!check);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.log(error);
+    }
+  };
   // format Date
   const formatDate = (date) => {
     const day = new Date(date);
@@ -111,7 +168,7 @@ function ManageAccount() {
   return (
     <>
       <ScrollToTop />
-      {loading?<LoadingAction/>:null}
+      {loading ? <LoadingAction /> : null}
       <HeaderLeft />
       <div className={styles.manage}>
         <div className={styles.title}>
@@ -173,9 +230,12 @@ function ManageAccount() {
                     >
                       Xem
                     </Link>
-                    <a href="#" className={styles.block}>
-                      Chặn
-                    </a>
+                    <span
+                      className={styles.block}
+                      onClick={() => HandleClick(item.status,item.id)}
+                    >
+                      {item.status ? "Chặn" : "Bỏ chặn"}
+                    </span>
                   </td>
                 </tr>
               ))
