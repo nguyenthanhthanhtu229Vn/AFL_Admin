@@ -18,7 +18,7 @@ function ManagePromote() {
   const [contentSearch, setContentSearch] = useState("");
   const [statusSearch, setStatusSearch] = useState("Chưa duyệt");
   const [countList, setCountList] = useState(0);
-  const [reason, setReason] = useState("")
+  const [reason, setReason] = useState("");
 
   const [itemAccount, setItemAccount] = useState([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
@@ -120,7 +120,7 @@ function ManagePromote() {
     }).then((result) => {
       if (result.isConfirmed) {
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        promoteAction(item, status,"");
+        promoteAction(item, status, "");
       }
     });
   };
@@ -143,16 +143,16 @@ function ManagePromote() {
         icon: styles.no_before_icon,
       },
       preConfirm: (login) => {
-       setReason(login)
+        setReason(login);
       },
       allowOutsideClick: () => !Swal.isLoading(),
     }).then((result) => {
       if (result.isConfirmed) {
-        promoteAction(item, status,result.value);
+        promoteAction(item, status, result.value);
       }
     });
   };
-  const promoteAction = async (item, status,reasonVal) => {
+  const promoteAction = async (item, status, reasonVal) => {
     setloading(true);
     console.log(reasonVal);
     const data = {
@@ -172,7 +172,7 @@ function ManagePromote() {
         data
       );
       if (response.status === 200) {
-        sendmail(item.id, status);
+        sendmail(item.id, status, item.userId);
       }
     } catch (error) {
       toast.error(error.response.data.message, {
@@ -189,7 +189,7 @@ function ManagePromote() {
     }
   };
 
-  const sendmail = async (id, status) => {
+  const sendmail = async (id, status, userId) => {
     try {
       const response = await axios.post(
         `https://afootballleague.ddns.net/api/v1/systems/send-mail-promote?promote-request-id=${id}&approve=${
@@ -197,6 +197,52 @@ function ManagePromote() {
         }`
       );
       if (response.status === 200) {
+        if (status === "Đã duyệt") {
+          updateRoleUser(userId);
+        } else {
+          toast.success("Duyệt thành công", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setCheck(!check);
+          setloading(false);
+        }
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.error(error.response);
+      setloading(false);
+    }
+  };
+
+  const updateRoleUser = async (a) => {
+    console.log(a);
+    const data = {
+      id: 3,
+      roleId: 3,
+    };
+    try {
+      const response = await axios.put(
+        "https://afootballleague.ddns.net/api/v1/users",
+        data,
+        {
+          headers: { "content-type": "multipart/form-data" },
+        }
+      );
+      if (response.status === 201) {
         toast.success("Duyệt thành công", {
           position: "top-right",
           autoClose: 3000,
