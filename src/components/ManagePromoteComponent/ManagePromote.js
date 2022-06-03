@@ -232,7 +232,7 @@ function ManagePromote() {
     console.log(a);
     const data = {
       id: 3,
-      roleId: 3,
+      roleId: 2,
     };
     try {
       const response = await axios.put(
