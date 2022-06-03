@@ -228,10 +228,9 @@ function ManagePromote() {
     }
   };
 
-  const updateRoleUser = async (a) => {
-    console.log(a);
+  const updateRoleUser = async (userId) => {
     const data = {
-      id: 3,
+      id: userId,
       roleId: 2,
     };
     try {
