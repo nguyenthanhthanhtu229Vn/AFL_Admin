@@ -211,7 +211,7 @@ function ManageAccount() {
               <th>STT</th>
               <th>Họ tên</th>
               <th>Giới tính</th>
-              <th>Ngày tạo tài khoản</th>
+              <th>Ngày tạo</th>
               <th>Email</th>
               <th>Chức năng</th>
             </tr>

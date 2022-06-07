@@ -111,10 +111,11 @@ a{
 }
 
 .popup_down{
+    z-index: 3;
     border-top: 1px solid #fff;
     position: absolute;
     bottom: -92px;
-    right: 0px;
+    right: -15px;
     width: 200px;
     background-color: var(--blue-black);
     display: none;
@@ -125,8 +126,8 @@ a{
     display: block;
 }
 .popup_down a{
-    text-align: right;
-    padding: 10px 20px;
+    /* text-align: right; */
+    padding: 10px 20px 10px 10px;
     display: block;
     font-family: "Mulish-Bold";
 }
@@ -136,6 +137,6 @@ a{
     color: var(--green-bold);
 }
 
-.popup_down a:not(:last-child){
+.popup_down a{
     border-bottom: 1px solid #fff;
 }
