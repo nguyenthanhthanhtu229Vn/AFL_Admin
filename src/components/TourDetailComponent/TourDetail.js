@@ -2,33 +2,41 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
+import LoadingAction from "../LoadingComponent/LoadingAction";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 function TourDetail() {
   const { idTour } = useParams();
   const [tournament, setTournament] = useState([]);
-  const [host, setHost] = useState([])
+  const [host, setHost] = useState([]);
+  const [loading, setLoading] = useState(false);
   const getTournament = () => {
+    setLoading(true);
     let afterDefaultURL = `tournaments/${idTour}`;
     let response = getAPI(afterDefaultURL);
     response
       .then((res) => {
         setTournament(res.data);
-        getUserById(res.data.userId)
+        getUserById(res.data.userId);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
-    //Get User
-    const getUserById = async (id) => {
-      let afterDefaultURL = `users/${id}`;
-      let response = getAPI(afterDefaultURL);
-      response
-        .then((res) => {
-          setHost(res.data);
-        })
-        .catch((err) => console.error(err));
-    };
+  //Get User
+  const getUserById = async (id) => {
+    let afterDefaultURL = `users/${id}`;
+    let response = getAPI(afterDefaultURL);
+    response
+      .then((res) => {
+        setHost(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   const getType = (id) => {
     if (1 === id) {
       return "Loại trực tiếp";
@@ -63,6 +71,7 @@ function TourDetail() {
   return (
     <>
       <ScrollToTop />
+      {loading?<LoadingAction/>:null}
       <HeaderLeft id={idTour} />
       <div className={styles.manage}>
         <div className={styles.title}>
@@ -151,8 +160,13 @@ function TourDetail() {
               </div>
               <div className={styles.text}>
                 <label htmlFor="mail">Điạ chỉ email</label>
-                <input type="text" id="mail" placeholder="*Địa chỉ email" disabled
-                  value={host.email}/>
+                <input
+                  type="text"
+                  id="mail"
+                  placeholder="*Địa chỉ email"
+                  disabled
+                  value={host.email}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="gender">Chế độ</label>
@@ -226,8 +240,13 @@ function TourDetail() {
               </div>
               <div className={styles.text}>
                 <label htmlFor="phone">Số điện thoại</label>
-                <input type="text" id="phone" placeholder="*Số điện thoại" disabled
-                  value={host.phone}/>
+                <input
+                  type="text"
+                  id="phone"
+                  placeholder="*Số điện thoại"
+                  disabled
+                  value={host.phone}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="address">Địa điểm</label>
@@ -241,15 +260,33 @@ function TourDetail() {
               </div>
               <div className={styles.text}>
                 <label htmlFor="cmnd">Hình thức</label>
-                <input type="text" id="cmnd" placeholder="*Hình thức" disabled value={getType(tournament.tournamentTypeId)}/>
+                <input
+                  type="text"
+                  id="cmnd"
+                  placeholder="*Hình thức"
+                  disabled
+                  value={getType(tournament.tournamentTypeId)}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="phoneB">Loại sân</label>
-                <input type="text" id="phoneB" placeholder="*Loại sân" disabled value={getFeild(tournament.footballFieldTypeId)} />
+                <input
+                  type="text"
+                  id="phoneB"
+                  placeholder="*Loại sân"
+                  disabled
+                  value={getFeild(tournament.footballFieldTypeId)}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="nameB">Số đội tham gia</label>
-                <input type="text" id="nameB" placeholder="*Số đội tham gia" disabled value={tournament.footballTeamNumber}/>
+                <input
+                  type="text"
+                  id="nameB"
+                  placeholder="*Số đội tham gia"
+                  disabled
+                  value={tournament.footballTeamNumber}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="numPlayer">Thành viên mỗi đội</label>
@@ -263,10 +300,18 @@ function TourDetail() {
               </div>
               <div className={styles.text}>
                 <label htmlFor="min">Thời gian mỗi trận (phút)</label>
-                <input type="text" id="min" placeholder="*Thời gian mỗi trận" disabled value={tournament.matchMinutes}/>
+                <input
+                  type="text"
+                  id="min"
+                  placeholder="*Thời gian mỗi trận"
+                  disabled
+                  value={tournament.matchMinutes}
+                />
               </div>
             </form>
-            <Link to={"/manageTournament"} className={styles.button}>Hoàn tất</Link>
+            <Link to={"/manageTournament"} className={styles.button}>
+              Hoàn tất
+            </Link>
           </div>
         </div>
       </div>

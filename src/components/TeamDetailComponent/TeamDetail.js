@@ -1,14 +1,18 @@
+import { load } from "@syncfusion/ej2-react-charts";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
+import LoadingAction from "../LoadingComponent/LoadingAction";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 function TeamDetail() {
   const { idTeam } = useParams();
   const [team, setTeam] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [manager, setManager] = useState([]);
   const getTeam = () => {
+    setLoading(true);
     let afterDefaultURL = `teams/${idTeam}`;
     let response = getAPI(afterDefaultURL);
     response
@@ -16,7 +20,9 @@ function TeamDetail() {
         setTeam(res.data);
         getUserById(idTeam);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   //Get User
@@ -26,8 +32,11 @@ function TeamDetail() {
     response
       .then((res) => {
         setManager(res.data);
+        setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   useEffect(() => {
@@ -36,7 +45,8 @@ function TeamDetail() {
   return (
     <>
       <ScrollToTop />
-      <HeaderLeft id={idTeam}/>
+      {loading ? <LoadingAction /> : null}
+      <HeaderLeft id={idTeam} />
       <div className={styles.manage}>
         <div className={styles.title}>
           <h2 className={styles.title__left}>{team.teamName}</h2>
@@ -127,7 +137,13 @@ function TeamDetail() {
               </div>
               <div className={styles.text}>
                 <label htmlFor="mail">Điạ chỉ email</label>
-                <input type="text" id="mail" placeholder="*Địa chỉ email" disabled value={manager.email}/>
+                <input
+                  type="text"
+                  id="mail"
+                  placeholder="*Địa chỉ email"
+                  disabled
+                  value={manager.email}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="genderf">Giới tính đội</label>
@@ -186,7 +202,9 @@ function TeamDetail() {
                 />
               </div>
             </form>
-            <Link to={"/manageTeam"} className={styles.button}>Hoàn tất</Link>
+            <Link to={"/manageTeam"} className={styles.button}>
+              Hoàn tất
+            </Link>
           </div>
         </div>
       </div>

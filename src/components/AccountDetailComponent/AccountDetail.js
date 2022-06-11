@@ -2,29 +2,47 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
+import LoadingAction from "../LoadingComponent/LoadingAction";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 function AccountDetail() {
   const { idAccount } = useParams();
+  const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState([]);
   const getAccount = () => {
+    setLoading(true);
     let afterDefaultURL = `users/${idAccount}`;
     let response = getAPI(afterDefaultURL);
     response
       .then((res) => {
         setAccount(res.data);
+        setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   useEffect(() => {
     getAccount();
   }, []);
+  // format Date
+  const formatDate = (date) => {
+    const day = new Date(date);
+    return (
+      String(day.getDate()).padStart(2, "0") +
+      "/" +
+      String(day.getMonth() + 1).padStart(2, "0") +
+      "/" +
+      day.getFullYear()
+    );
+  };
 
   return (
     <>
       <ScrollToTop />
-      <HeaderLeft id={account.id}/>
+      {loading ? <LoadingAction /> : null}
+      <HeaderLeft id={account.id} />
       <div className={styles.manage}>
         <div className={styles.title}>
           <h2 className={styles.title__left}>{account.username}</h2>
@@ -37,7 +55,10 @@ function AccountDetail() {
               Quản lý giải đấu
             </Link>
             <span>{">>"}</span>
-            <Link to={`/accountDetail/${account.id}`} className="current__location">
+            <Link
+              to={`/accountDetail/${account.id}`}
+              className="current__location"
+            >
               {account.username}
             </Link>
           </div>
@@ -77,29 +98,57 @@ function AccountDetail() {
               <div className={styles.text}>
                 <label htmlFor="gender">Giới tính</label>
                 <select id="gender" disabled>
-                  <option  value="Male" selected={account.gender === "Male" ? true : false}>
+                  <option
+                    value="Male"
+                    selected={account.gender === "Male" ? true : false}
+                  >
                     Nam
                   </option>
-                  <option  value="Female" selected={account.gender === "Female" ? true : false}>
+                  <option
+                    value="Female"
+                    selected={account.gender === "Female" ? true : false}
+                  >
                     Nữ
                   </option>
                 </select>
               </div>
               <div className={styles.text}>
                 <label htmlFor="dob">Ngày sinh</label>
-                <input type="datetime-local" id="dob" disabled value={account.dateOfBirth}/>
+                <p>{formatDate(account.dateOfBirth)}</p>
               </div>
               <div className={styles.text}>
                 <label htmlFor="phone">Số điện thoại</label>
-                <input type="text" id="phone" placeholder="*Số điện thoại" disabled value={account.phone}/>
+                <input
+                  type="text"
+                  id="phone"
+                  placeholder="*Số điện thoại"
+                  disabled
+                  value={account.phone}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="address">Địa chỉ</label>
-                <input type="text" id="address" placeholder="*Địa chỉ" disabled value={account.address}/>
+                <input
+                  type="text"
+                  id="address"
+                  placeholder="*Địa chỉ"
+                  disabled
+                  value={account.address}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="cmnd">CMND</label>
-                <input type="text" id="cmnd" placeholder="*CMND" disabled value={account.identityCard}/>
+                <input
+                  type="text"
+                  id="cmnd"
+                  placeholder="*CMND"
+                  disabled
+                  value={account.identityCard}
+                />
+              </div>
+              <div className={styles.text}>
+                <label htmlFor="dateCreate">Ngày cấp CMND</label>
+                <p> {formatDate(account.dateIssuance)}</p>
               </div>
               <div className={styles.text}>
                 <label htmlFor="phoneB">Số điện thoại doanh nghiệp</label>
@@ -107,27 +156,38 @@ function AccountDetail() {
                   type="text"
                   id="phoneB"
                   placeholder="*Số điện thoại doanh nghiệp"
-                  disabled value={account.phoneBusiness}
+                  disabled
+                  value={account.phoneBusiness}
                 />
               </div>
               <div className={styles.text}>
                 <label htmlFor="nameB">Tên doanh nghiệp</label>
-                <input type="text" id="nameB" placeholder="*Tên doanh nghiệp" disabled value={account.nameBusiness}/>
+                <input
+                  type="text"
+                  id="nameB"
+                  placeholder="*Tên doanh nghiệp"
+                  disabled
+                  value={account.nameBusiness}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="codeB">Mã doanh nghiệp</label>
-                <input type="text" id="codeB" placeholder="*Mã doanh nghiệp" disabled value={account.tinbusiness}/>
+                <input
+                  type="text"
+                  id="codeB"
+                  placeholder="*Mã doanh nghiệp"
+                  disabled
+                  value={account.tinbusiness}
+                />
               </div>
               <div className={styles.text}>
                 <label htmlFor="dateCreate">Ngày tạo tài khoản</label>
-                <input type="datetime-local" id="dateCreate" disabled value={account.dateCreate}/>
-              </div>
-              <div className={styles.text}>
-                <label htmlFor="bio">Mô tả bản thân</label>
-                <input type="text" id="bio" placeholder="*Mô tả bản thân" disabled value={account.bio}/>
+                <p>{formatDate(account.dateCreate)}</p>
               </div>
             </form>
-            <button>Hoàn tất</button>
+            <Link to={"/manageAccount"} className={styles.button}>
+              Hoàn tất
+            </Link>
           </div>
         </div>
       </div>

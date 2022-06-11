@@ -172,7 +172,7 @@ function ManagePromote() {
         data
       );
       if (response.status === 200) {
-        sendmail(item.id, status, item.userId);
+        sendmail(item.id, status, item);
       }
     } catch (error) {
       toast.error(error.response.data.message, {
@@ -189,7 +189,7 @@ function ManagePromote() {
     }
   };
 
-  const sendmail = async (id, status, userId) => {
+  const sendmail = async (id, status, item) => {
     try {
       const response = await axios.post(
         `https://afootballleague.ddns.net/api/v1/systems/send-mail-promote?promote-request-id=${id}&approve=${
@@ -198,7 +198,7 @@ function ManagePromote() {
       );
       if (response.status === 200) {
         if (status === "Đã duyệt") {
-          updateRoleUser(userId);
+          updateRoleUser(item);
         } else {
           toast.success("Duyệt thành công", {
             position: "top-right",
@@ -228,10 +228,15 @@ function ManagePromote() {
     }
   };
 
-  const updateRoleUser = async (userId) => {
+  const updateRoleUser = async (item) => {
     const data = {
-      id: userId,
+      id: item.userId,
       roleId: 2,
+      identityCard: item.identityCard,
+      dateIssuance: item.dateIssuance,
+      phoneBusiness: item.phoneBusiness,
+      nameBusiness: item.nameBusiness,
+      tinbusiness: item.tinbusiness,
     };
     try {
       const response = await axios.put(
@@ -353,49 +358,11 @@ function ManagePromote() {
               <i class="fa-solid fa-magnifying-glass"></i>
             </form>
             <div className={styles.main__content}>
-              {statusSearch === "Chưa duyệt" ? (
-                <div className={styles.option}>
-                  <div className={styles.selectAll}>
-                    <input
-                      type="checkbox"
-                      id="selectAll"
-                      name="selectAll"
-                      onChange={handleSelectAll}
-                      checked={isCheckAll}
-                    />
-                    <label htmlFor="selectAll" />
-                    <span>Chọn tất cả</span>
-                  </div>
-                  <div className={styles.option_right}>
-                    <i
-                      class="fa-solid fa-arrow-rotate-right"
-                      onClick={() => {
-                        setCheck(!check);
-                      }}
-                    ></i>
-                    <i class="fa-solid fa-circle-check"></i>
-                    <i class="fa-solid fa-circle-minus"></i>
-                  </div>
-                </div>
-              ) : null}
               <div className={styles.list}>
                 {promoteAccount.length !== 0 ? (
                   promoteAccount.map((item) => (
                     <div className={styles.item} key={item.id}>
-                      <div className={styles.left}>
-                        {item.status === "Chưa duyệt" ? (
-                          <>
-                            {/* <img src="/assets/img/homepage/pic-1.png" alt="img" /> */}
-                            <input
-                              type="checkbox"
-                              id={item.id}
-                              checked={isCheck.includes(item.id)}
-                              // checked={isCheck.includes(item.id)}
-                            />
-                            <label htmlFor={item.id} />
-                          </>
-                        ) : null}
-                      </div>
+                      <div className={styles.left}></div>
 
                       <div className={styles.mid}>
                         <h3>{item.requestContent}</h3>

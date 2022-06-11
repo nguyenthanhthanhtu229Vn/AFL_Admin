@@ -108,6 +108,7 @@
 }
 
 .text input,
+.text p,
 .text select {
   font-family: "Mulish-Regular";
   font-size: 18px;
@@ -124,13 +125,14 @@
   width: 370px;
 }
 
-button {
+.button {
   margin-top: 30px;
   padding: 15px;
   width: 200px;
   font-size: 18px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
   display: block;
   background-color: var(--green-bold);
   text-transform: uppercase;
@@ -139,7 +141,7 @@ button {
   border-radius: 5px;
 }
 
-button:hover{
+.button:hover{
   cursor: pointer;
   filter: brightness(90%);
 }
