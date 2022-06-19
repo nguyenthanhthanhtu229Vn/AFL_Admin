@@ -184,6 +184,9 @@ function Login() {
               />
             </div>
             <p className={styles.error}>{passwordErr}</p>
+            <div className={styles.remember__pass}>
+              <Link to={"/resetPassword"}>Quên mật khẩu?</Link>
+            </div>
             <button
               type="submit"
               className={styles.btn_login}

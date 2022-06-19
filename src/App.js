@@ -13,6 +13,9 @@ import TeamDetail from "./components/TeamDetailComponent/TeamDetail";
 import Login from "./components/Login/Login";
 import Dashboard from "./components/DashboardComponent/Dashboard";
 import ManagePromote from "./components/ManagePromoteComponent/ManagePromote";
+import Profile from "./components/ProfileComponent/Profile";
+import ResetPassword from "./components/ResetPasswordComponent/ResetPassword";
+import ChangePassWord from "./components/ChangePasswordComponent/ChangePassword";
 function App() {
   const user = localStorage.getItem("userInfo");
   return (
@@ -20,6 +23,17 @@ function App() {
       <BrowserRouter>
         <ToastContainer />
         <Routes>
+        <Route exact path="/resetPassword" element={<ResetPassword />} />
+        <Route
+            exact
+            path="/changePassword"
+            element={user ? <ChangePassWord /> : <Navigate to={"/login"} />}
+          />
+        <Route
+            exact
+            path="/profile"
+            element={user ? <Profile /> : <Navigate to={"/login"} />}
+          />
           <Route
             exact
             path="/"

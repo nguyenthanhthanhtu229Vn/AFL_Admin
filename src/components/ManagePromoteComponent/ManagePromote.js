@@ -120,7 +120,7 @@ function ManagePromote() {
     }).then((result) => {
       if (result.isConfirmed) {
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        promoteAction(item, status, "");
+        updateRoleUser(item, status, "");
       }
     });
   };
@@ -198,7 +198,17 @@ function ManagePromote() {
       );
       if (response.status === 200) {
         if (status === "Đã duyệt") {
-          updateRoleUser(item);
+          toast.success("Duyệt thành công", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setCheck(!check);
+          setloading(false);
         } else {
           toast.success("Duyệt thành công", {
             position: "top-right",
@@ -228,7 +238,8 @@ function ManagePromote() {
     }
   };
 
-  const updateRoleUser = async (item) => {
+  const updateRoleUser = async (item, status, reasonVal) => {
+    setloading(true);
     const data = {
       id: item.userId,
       roleId: 2,
@@ -247,17 +258,7 @@ function ManagePromote() {
         }
       );
       if (response.status === 201) {
-        toast.success("Duyệt thành công", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setCheck(!check);
-        setloading(false);
+        promoteAction(item, status, reasonVal);
       }
     } catch (error) {
       toast.error(error.response.data.message, {
@@ -358,6 +359,18 @@ function ManagePromote() {
               <i class="fa-solid fa-magnifying-glass"></i>
             </form>
             <div className={styles.main__content}>
+            <div className={styles.option}>
+                  <div className={styles.selectAll}>
+                  </div>
+                  <div className={styles.option_right}>
+                    <i
+                      class="fa-solid fa-arrow-rotate-right"
+                      onClick={() => {
+                        setCheck(!check);
+                      }}
+                    ></i>
+                  </div>
+                </div>
               <div className={styles.list}>
                 {promoteAccount.length !== 0 ? (
                   promoteAccount.map((item) => (
