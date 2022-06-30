@@ -43,7 +43,7 @@
   border-radius: 50%;
   border: 1px solid #fff;
 }
-.content__left a {
+.content__left .link {
   margin-top: 20px;
   display: block;
   background-color: #7c0000;
@@ -53,7 +53,7 @@
   border-radius: 5px;
 }
 
-.content__left a:hover{
+.content__left .link:hover{
   cursor: pointer;
   filter: brightness(90%);
 }
@@ -144,4 +144,8 @@
 .button:hover{
   cursor: pointer;
   filter: brightness(90%);
+}
+
+.no_before_icon::before{
+  display: none !important;
 }

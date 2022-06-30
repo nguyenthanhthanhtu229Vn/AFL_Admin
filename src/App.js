@@ -16,6 +16,7 @@ import ManagePromote from "./components/ManagePromoteComponent/ManagePromote";
 import Profile from "./components/ProfileComponent/Profile";
 import ResetPassword from "./components/ResetPasswordComponent/ResetPassword";
 import ChangePassWord from "./components/ChangePasswordComponent/ChangePassword";
+import ManagePlayer from "./components/ManagePlayerComponent/ManagePlayer";
 function App() {
   const user = localStorage.getItem("userInfo");
   return (
@@ -68,6 +69,11 @@ function App() {
             exact
             path="/managePromote"
             element={user ? <ManagePromote /> : <Navigate to={"/login"} />}
+          />
+          <Route
+            exact
+            path="/managePlayer"
+            element={user ? <ManagePlayer /> : <Navigate to={"/login"} />}
           />
           <Route
             exact

@@ -1,0 +1,291 @@
+.manage {
+    padding: 30px;
+    margin-left: 310px;
+    margin-top: -20px;
+  }
+  
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title__left {
+    font-size: 32px;
+  }
+  
+  .another__location {
+    color: var(--green-bold);
+  }
+  
+  .title__location span {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .search {
+    margin-top: 30px;
+  }
+  
+  .search__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .search__top span {
+    font-size: 16px;
+    font-family: "Mulish-Regular";
+  }
+  
+  .search__top select {
+    padding: 10px 30px;
+    font-family: "Mulish-Regular";
+    outline: none;
+    font-size: 18px;
+  }
+  
+  .search__bot {
+    margin-top: 30px;
+    position: relative;
+    padding-right: 40px;
+  }
+  
+  .search__bot input {
+    width: 100%;
+    padding: 20px;
+    font-size: 18px;
+    font-family: "Mulish-Regular";
+    outline: none;
+    border: none;
+    background-color: var(--blue-black);
+    color: var(--white-text);
+  }
+  
+  .search__bot i {
+    position: absolute;
+    right: 20px;
+    font-size: 18px;
+    top: 20px;
+  }
+  
+  .searchRight {
+    display: flex;
+    column-gap: 15px;
+    align-items: center;
+  }
+  
+  .searchRight p i {
+    margin-top: 4px;
+  }
+  .searchRight p {
+    background-color: var(--white-text);
+    text-align: center;
+    padding: 10px 10px;
+    font-size: 18px;
+    height: 25px;
+    width: 25px;
+    color: var(--black-text);
+    cursor: pointer;
+  }
+  
+  .searchRight p.active {
+    background-color: var(--green-bold);
+  }
+  
+  /* PagingTournament */
+  
+  .pagingTournament {
+    width: max-content;
+    margin: 0 auto;
+    margin-top: 20px;
+    /* margin-bottom: 30px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .pagelink {
+    color: var(--white-text);
+    display: inline-block;
+    padding: 10px 15px;
+  }
+  
+  .pageItem:hover .pagelink {
+    color: var(--blue-black);
+  }
+  .pageItem {
+    margin-top: 15px;
+    margin-left: 20px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: max-content;
+    transition: 0.5s;
+    cursor: pointer;
+  }
+  
+  .pageItem.active,
+  .pageItem:hover {
+    background-color: var(--green-bold);
+    color: var(--black-text);
+    border: 1px solid transparent;
+  }
+  
+  .teamList {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 25px;
+    row-gap: 30px;
+  }
+  
+  .teamItem {
+    background-color: var(--blue-black);
+    height: 300px;
+    position: relative;
+  }
+  
+  .itemImage {
+    cursor: pointer;
+    height: 0;
+    overflow: hidden;
+    padding-bottom: 50%;
+    margin-top: 20px;
+    position: relative;
+  }
+  .teamItem:hover .itemImage img {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  .itemImage img {
+    left: 50%;
+    min-height: 50%;
+    min-width: 50%;
+    object-fit: cover;
+    opacity: 0.8;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
+    transition: 0.5s;
+  }
+  
+  .teamList.active .itemText{
+    text-align: left;
+  }
+  .itemText {
+    text-align: center;
+  }
+  .numberPlayer {
+    position: absolute;
+    top: 0;
+    top: 20px;
+    left: 15px;
+  }
+  
+  .numberPlayer span {
+    margin-left: 5px;
+  }
+  
+  .nameTeam {
+    margin-top: 20px;
+    font-size: 24px;
+    font-family: "Mulish-Bold";
+    margin-bottom: 10px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+  
+  .descriptionTeam {
+    font-size: 16px;
+    margin-bottom: 20px;
+    height: 18px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+  
+  .viewDetail {
+    transition: 0.5s;
+    background-color: var(--white-text);
+    width: inherit;
+    display: block;
+    color: var(--black-text);
+    padding: 20px;
+    height: max-content;
+    font-size: 18px;
+    font-family: "Mulish-Bold";
+  }
+  
+  .viewDetail:hover {
+    background-color: var(--green-bold);
+  }
+  .viewDetail i {
+    margin-right: 10px;
+  }
+  
+  .teamList.active {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  
+  .teamList.active .teamItem {
+    height: 165px;
+    display: flex;
+    column-gap: 30px;
+    padding: 20px;
+  }
+  
+  .teamList.active .itemImage {
+    margin-top: 0;
+    position: initial;
+    height: initial;
+    padding-bottom: initial;
+    margin-left: 50px;
+  }
+  
+  .teamList.active .itemImage img {
+    position: initial;
+    left: initial;
+    top: initial;
+    transform: initial;
+    min-height: 100%;
+    width: 160px;
+    margin-right: 20px;
+  }
+  
+  .teamList.active .numberPlayer {
+    position: initial;
+  }
+  
+  .teamList.active .nameTeam {
+    margin-top: 0;
+  }
+  .teamList.active .viewDetail {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .teamList.active .nameTeam {
+    margin-top: 20px;
+    font-size: 28px;
+    margin-bottom: 25px;
+  }
+  
+  .teamList.active .numberPlayer span {
+    margin-left: 5px;
+    font-size: 18px;
+  }
+  
+  .teamList.active .descriptionTeam {
+    font-size: 18px;
+    margin-bottom: 25px;
+  }
+  
+  .noItem{
+    font-size: 18px;
+  }

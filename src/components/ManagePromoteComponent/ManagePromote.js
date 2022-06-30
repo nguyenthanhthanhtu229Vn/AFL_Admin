@@ -22,6 +22,7 @@ function ManagePromote() {
 
   const [itemAccount, setItemAccount] = useState([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
+
   const [isCheck, setIsCheck] = useState([]);
   const handleSelectAll = (e) => {
     setIsCheckAll(!isCheckAll);
@@ -277,7 +278,7 @@ function ManagePromote() {
   const filterStatusPromote = (status) => {
     setCurrentPage(1);
     setStatusSearch(status);
-    getPromoteAccount(contentSearch, currentPage, statusSearch);
+    getPromoteAccount(contentSearch, currentPage, status);
     setCheck(!check);
   };
   return (
@@ -359,26 +360,28 @@ function ManagePromote() {
               <i class="fa-solid fa-magnifying-glass"></i>
             </form>
             <div className={styles.main__content}>
-            <div className={styles.option}>
-                  <div className={styles.selectAll}>
-                  </div>
-                  <div className={styles.option_right}>
-                    <i
-                      class="fa-solid fa-arrow-rotate-right"
-                      onClick={() => {
-                        setCheck(!check);
-                      }}
-                    ></i>
-                  </div>
+              <div className={styles.option}>
+                <div className={styles.selectAll}></div>
+                <div className={styles.option_right}>
+                  <i
+                    class="fa-solid fa-arrow-rotate-right"
+                    onClick={() => {
+                      setCheck(!check);
+                    }}
+                  ></i>
                 </div>
+              </div>
               <div className={styles.list}>
                 {promoteAccount.length !== 0 ? (
                   promoteAccount.map((item) => (
                     <div className={styles.item} key={item.id}>
-                      <div className={styles.left}></div>
-
+                      <div className={styles.left}>
+                        <img src={item.user.avatar} alt={item.user.username} />
+                      </div>
                       <div className={styles.mid}>
-                        <h3>{item.requestContent}</h3>
+                        <Link to={`/accountDetail/${item.userId}`}>
+                          <h3>{item.requestContent}</h3>
+                        </Link>
                         <h4>Nội dung:</h4>
                         {item.identityCard !== null ? (
                           <p>-CMND: {item.identityCard}</p>
@@ -397,8 +400,10 @@ function ManagePromote() {
                         ) : null}
                       </div>
                       <div className={styles.right}>
-                        <span className={styles.green}></span>
-                        {formatDateTime(item.dateCreate)}
+                        <div className={styles.wrapRight}>
+                          <span className={styles.green}></span>
+                          <p>{formatDateTime(item.dateCreate)}</p>
+                        </div>
                         {item.status === "Chưa duyệt" ? (
                           <div className={styles.right_sub}>
                             <i

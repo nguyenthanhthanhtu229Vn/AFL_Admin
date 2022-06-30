@@ -4,11 +4,15 @@ import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import LoadingAction from "../LoadingComponent/LoadingAction";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
+import Swal from "sweetalert2";
 import styles from "./styles/style.module.css";
+import axios from "axios";
+import { toast } from "react-toastify";
 function AccountDetail() {
   const { idAccount } = useParams();
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState([]);
+  const [check, setCheck] = useState(false);
   const getAccount = () => {
     setLoading(true);
     let afterDefaultURL = `users/${idAccount}`;
@@ -25,7 +29,7 @@ function AccountDetail() {
 
   useEffect(() => {
     getAccount();
-  }, []);
+  }, [check]);
   // format Date
   const formatDate = (date) => {
     const day = new Date(date);
@@ -38,6 +42,57 @@ function AccountDetail() {
     );
   };
 
+  const changeStatusUser = async (id) => {
+    try {
+      const response = await axios.patch(
+        `https://afootballleague.ddns.net/api/v1/users/${id}`
+      );
+      if (response.status === 200) {
+        toast.success("Thành công", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setCheck(!check);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.log(error);
+    }
+  };
+
+  const HandleClick = (status,id) => {
+    Swal.fire({
+      title: "Bạn chắc chứ?",
+      text: status ? "Chặn tài khoản này" : "Bỏ chặn tài khoản",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5fe37d",
+      cancelButtonColor: "#b80e4e",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      customClass: {
+        icon: styles.no_before_icon,
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        changeStatusUser(id)
+      }
+    });
+  };
   return (
     <>
       <ScrollToTop />
@@ -67,8 +122,12 @@ function AccountDetail() {
           <div className={styles.content__left}>
             <img src={account.avatar} alt={account.username} />
             <div className={styles.function}>
-              <a href="#">Chặn tài khoản</a>
-              <a href="#">Xóa tài khoản</a>
+              <span className={styles.link}
+                onClick={() => HandleClick(account.status, account.id)}
+              >
+                {account.status ? "Chặn tài khoản" : "Bỏ chặn tài khoản"}
+              </span>
+              {/* <a href="#">Xóa tài khoản</a> */}
             </div>
           </div>
           <div className={styles.content__right}>

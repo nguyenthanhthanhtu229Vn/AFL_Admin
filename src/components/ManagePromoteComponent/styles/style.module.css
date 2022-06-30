@@ -203,7 +203,7 @@ input:checked + label::after {
 }
 
 .item .mid {
-  margin-left: 10px;
+  margin-left: 20px;
   width: max-content;
   text-align: left;
   width: 680px;
@@ -213,8 +213,12 @@ input:checked + label::after {
 .item .mid h3 {
   font-family: "Mulish-Bold";
   margin-bottom: 10px;
+  max-width: 600px;
+  overflow: hidden;
 }
-
+.item .mid a:hover{
+  text-decoration: underline;
+}
 .item .mid h4 {
   margin-bottom: 10px;
 }
@@ -245,6 +249,14 @@ input:checked + label::after {
 .option_right i {
   font-size: 24px;
   cursor: pointer;
+}
+
+.wrapRight{
+  display: flex;
+  align-items: center;
+}
+.wrapRight p{
+  width: max-content;
 }
 /* PagingTournament */
 

@@ -70,6 +70,27 @@ function HeaderLeft(id) {
             </p>
             {openManage ? (
               <>
+              <Link
+                  to={"/manageAccount"}
+                  onClick={() => setactiveMenu("/manageAccount")}
+                  className={
+                    activeMenu === "/manageAccount" ||
+                    activeMenu === `/accountDetail/${id.id}`
+                      ? styles.active
+                      : ""
+                  }
+                >
+                  Quản lý tài khoản
+                </Link>
+                <Link
+                  to={"/managePromote"}
+                  onClick={() => setactiveMenu("/managePromote")}
+                  className={
+                    activeMenu === "/managePromote" ? styles.active : ""
+                  }
+                >
+                  Quản lý thăng cấp
+                </Link>
                 <Link
                   to={"/manageTournament"}
                   onClick={() => setactiveMenu("/manageTournament")}
@@ -95,25 +116,13 @@ function HeaderLeft(id) {
                   Quản lý đội bóng
                 </Link>
                 <Link
-                  to={"/manageAccount"}
-                  onClick={() => setactiveMenu("/manageAccount")}
+                  to={"/managePlayer"}
+                  onClick={() => setactiveMenu("/managePlayer")}
                   className={
-                    activeMenu === "/manageAccount" ||
-                    activeMenu === `/accountDetail/${id.id}`
-                      ? styles.active
-                      : ""
+                    activeMenu === "/managePlayer" ? styles.active : ""
                   }
                 >
-                  Quản lý tài khoản
-                </Link>
-                <Link
-                  to={"/managePromote"}
-                  onClick={() => setactiveMenu("/managePromote")}
-                  className={
-                    activeMenu === "/managePromote" ? styles.active : ""
-                  }
-                >
-                  Quản lý thăng cấp
+                  Quản lý cầu thủ
                 </Link>
                 <Link
                   to={"/manageReport"}
