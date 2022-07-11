@@ -17,6 +17,7 @@ import Profile from "./components/ProfileComponent/Profile";
 import ResetPassword from "./components/ResetPasswordComponent/ResetPassword";
 import ChangePassWord from "./components/ChangePasswordComponent/ChangePassword";
 import ManagePlayer from "./components/ManagePlayerComponent/ManagePlayer";
+import PlayerDetail from "./components/PlayerDetailComponent/PlayerDetail";
 function App() {
   const user = localStorage.getItem("userInfo");
   return (
@@ -89,6 +90,11 @@ function App() {
             exact
             path="/teamDetail/:idTeam"
             element={user ? <TeamDetail /> : <Navigate to={"/login"} />}
+          />
+          <Route
+            exact
+            path="/playerDetail/:idPlayer"
+            element={user ? <PlayerDetail /> : <Navigate to={"/login"} />}
           />
           <Route
             exact

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getAPI } from "../../api";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import LoadingAction from "../LoadingComponent/LoadingAction";
+import LoadingCircle from "../LoadingComponent/LoadingCircle";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 function TourDetail() {
@@ -10,6 +11,36 @@ function TourDetail() {
   const [tournament, setTournament] = useState([]);
   const [host, setHost] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingSke, setLoadingSke] = useState(false);
+  const [teams, setTeams] = useState([])
+  const [limit, setLimit] = useState(6);
+  const [allTeam, setAllTeam] = useState([]);
+  const [height, setHeight] = useState(0);
+  const infiniteScroll = (event) => {
+    if (
+      height.scrollHeight - Math.round(height.scrollTop) ===
+      height.clientHeight
+    ) {
+      setLimit(limit + 4);
+    }
+  };
+
+  const getTeamByIdTour = () => {
+    setLoadingSke(true);
+    let afterDefaultURL = `team-in-tournaments?tournament-id=${idTour}&status=Tham%20gia&order-by=Id&order-type=ASC&page-offset=1&limit=${limit}`;
+    let response = getAPI(afterDefaultURL);
+    response
+      .then((res) => {
+        setAllTeam(res.data.teamInTournaments);
+        console.log(res.data.teamInTournaments);
+        setLoadingSke(false);
+      })
+      .catch((err) => {
+        setLoadingSke(false);
+        console.error(err);
+      });
+  };
+
   const getTournament = () => {
     setLoading(true);
     let afterDefaultURL = `tournaments/${idTour}`;
@@ -53,13 +84,13 @@ function TourDetail() {
 
   const getFeild = (id) => {
     if (1 === id) {
-      return " | Sân 5";
+      return "Sân 5";
     }
     if (2 === id) {
-      return " | Sân 7";
+      return "Sân 7";
     }
     if (3 === id) {
-      return " | Sân 11";
+      return "Sân 11";
     } else {
       return "";
     }
@@ -67,11 +98,61 @@ function TourDetail() {
 
   useEffect(() => {
     getTournament();
+    getTeam();
   }, []);
+
+  // format DateTime
+  const formatDateTime = (date) => {
+    const day = new Date(date);
+    return (
+      String(day.getHours()).padStart(2, "0") +
+      ":" +
+      String(day.getMinutes()).padStart(2, "0") +
+      " - " +
+      String(day.getDate()).padStart(2, "0") +
+      "/" +
+      String(day.getMonth() + 1).padStart(2, "0") +
+      "/" +
+      day.getFullYear()
+    );
+  };
+
+  useEffect(() => {
+    getTeamByIdTour();
+  }, [limit]);
+
+  const getTeam = async () => {
+    try {
+      let afterURLDefault = `teams?page-offset=1&limit=200`;
+      setLoading(true);
+      const res = await getAPI(afterURLDefault);
+      if (res.status === 200) {
+        setTeams(res.data.teams);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const checkTeam=(item)=>{
+    let a=[];
+    if(teams.length>0){
+      for(let i=0;i<teams.length;i++){
+        if(teams[i].id===item.teamId){
+          console.log("first")
+          a= teams[i];
+          break;
+        }
+      }
+    }
+    return a;
+  }
   return (
     <>
       <ScrollToTop />
-      {loading?<LoadingAction/>:null}
+      {loading ? <LoadingAction /> : null}
       <HeaderLeft id={idTour} />
       <div className={styles.manage}>
         <div className={styles.title}>
@@ -101,36 +182,36 @@ function TourDetail() {
             </div>
             <div className={styles.content__leftdown}>
               <h2>Đội bóng tham gia</h2>
-              <div className={styles.team__wrap}>
-                <p>Tên đội bóng</p>
-                <p>
-                  FB PLAY
-                  <img src="/assets/img/homepage/team1.png" alt="team" />
-                </p>
-                <p>
-                  FC Barca{" "}
-                  <img src="/assets/img/homepage/team2.png" alt="team" />
-                </p>
-                <p>
-                  FC Barca{" "}
-                  <img src="/assets/img/homepage/team3.png" alt="team" />
-                </p>
-                <p>
-                  FC Barca{" "}
-                  <img src="/assets/img/homepage/team1.png" alt="team" />
-                </p>
-                <p>
-                  FC Barca{" "}
-                  <img src="/assets/img/homepage/team2.png" alt="team" />
-                </p>
-                <p>
-                  FC Barca{" "}
-                  <img src="/assets/img/homepage/team1.png" alt="team" />
-                </p>
-                <p>
-                  FC Barca{" "}
-                  <img src="/assets/img/homepage/team1.png" alt="team" />
-                </p>
+              <div
+                className={styles.team__wrap}
+                ref={(divElement) => {
+                  setHeight(divElement);
+                }}
+                onScroll={(e) => {
+                  infiniteScroll(e);
+                }}
+              >
+                   {allTeam.length !== 0 ? (
+                  <>
+                    <p>Tên đội bóng</p>
+                    {allTeam.map((item,index) => (
+                      <>
+                        <Link to={`/teamDetail/${item.teamId}`} key={item.id}>
+                          <p >
+                            {checkTeam(item).teamName}
+                            <img
+                              src={checkTeam(item).teamAvatar}
+                              alt={checkTeam(item).teamName}
+                            />
+                          </p>
+                        </Link>
+                      </>
+                    ))}
+                    {loadingSke ? <LoadingCircle /> : null}
+                  </>
+                ) : (
+                  <p>Chưa đội bóng nào tham gia</p>
+                )}
               </div>
             </div>
           </div>
@@ -204,39 +285,19 @@ function TourDetail() {
               </div>
               <div className={styles.text}>
                 <label htmlFor="dateEnd">Ngày bắt đầu giải</label>
-                <input
-                  type="datetime-local"
-                  id="dateEnd"
-                  disabled
-                  value={tournament.tournamentStartDate}
-                />
+                <p>{formatDateTime(tournament.tournamentStartDate)}</p>
               </div>
               <div className={styles.text}>
                 <label htmlFor="dateStart">Ngày bắt đầu giải</label>
-                <input
-                  type="datetime-local"
-                  id="dateStart"
-                  disabled
-                  value={tournament.tournamentEndDate}
-                />
+                <p>{formatDateTime(tournament.tournamentEndDate)}</p>
               </div>
               <div className={styles.text}>
                 <label htmlFor="dob">Ngày tạo giải</label>
-                <input
-                  type="datetime-local"
-                  id="dob"
-                  disabled
-                  value={tournament.dateCreate}
-                />
+                <p>{formatDateTime(tournament.dateCreate)}</p>
               </div>
               <div className={styles.text}>
                 <label htmlFor="dateEndRegis">Ngày kết thức đăng ký</label>
-                <input
-                  type="datetime-local"
-                  id="dateEndRegis"
-                  disabled
-                  value={tournament.registerEndDate}
-                />
+                <p>{formatDateTime(tournament.registerEndDate)}</p>
               </div>
               <div className={styles.text}>
                 <label htmlFor="phone">Số điện thoại</label>

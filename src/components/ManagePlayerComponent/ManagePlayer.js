@@ -15,32 +15,33 @@ function ManagePlayer() {
     const [check, setCheck] = useState(false);
     const [contentSearch, setContentSearch] = useState("");
   
-    const [team, setTeam] = useState([]);
+    const [player, setPlayer] = useState([]);
     const [countList, setCountList] = useState(0);
     const [sort, setSort] = useState("");
-    const [orderBy, setOrderBy] = useState("TeamName");
+    const [orderBy, setOrderBy] = useState("PlayerName");
     const [orderType, setOrderType] = useState("ASC");
   
     const handlePageClick = (data) => {
       setCurrentPage(data.selected + 1);
-      getTeam(contentSearch, data.selected + 1, "NAME", contentSearch);
+      getPlayer(contentSearch, data.selected + 1, "NAME", contentSearch);
       setCheck(!check);
     };
   
-    const getTeam = (nameFind, currentPage, anotherSearch, value) => {
+    const getPlayer = (nameFind, currentPage, anotherSearch, value) => {
       setloading(true);
       let afterDefaultURL = null;
       if (anotherSearch === "NAME") {
-        afterDefaultURL = `teams?team-name=${nameFind}&order-by=${orderBy}&order-type=${orderType}&page-offset=${currentPage}&limit=8`;
+        afterDefaultURL = `football-players?football-player-name=${nameFind}&order-by=${orderBy}&order-type=${orderType}&page-offset=${currentPage}&limit=8`;
       }
       if (anotherSearch === "SORT") {
         const fullOrder = value.split("-");
-        afterDefaultURL = `teams?team-name=${nameFind}&order-by=${fullOrder[0]}&order-type=${fullOrder[1]}&page-offset=${currentPage}&limit=8`;
+        afterDefaultURL = `football-players?football-player-name=${nameFind}&order-by=${fullOrder[0]}&order-type=${fullOrder[1]}&page-offset=${currentPage}&limit=8`;
       }
       let response = getAPI(afterDefaultURL);
       response
         .then((res) => {
-          setTeam(res.data.teams);
+          console.log(res.data)
+          setPlayer(res.data.footballPlayers);
           setCountList(res.data.countList);
           setCount(res.data.countList);
           setloading(false);
@@ -52,17 +53,17 @@ function ManagePlayer() {
     };
   
     useEffect(() => {
-      getTeam(contentSearch, currentPage, "NAME", contentSearch);
+      getPlayer(contentSearch, currentPage, "NAME", contentSearch);
     }, [check, currentPage]);
-    const splitTeamArea = (teamArea) => {
-      let myArray = teamArea.split(",");
-      return myArray[myArray.length - 1];
-    };
+    // const splitTeamArea = (teamArea) => {
+    //   let myArray = teamArea.split(",");
+    //   return myArray[myArray.length - 1];
+    // };
   
     const onSubmitHandler = (e) => {
       e.preventDefault();
       setCurrentPage(1);
-      getTeam(contentSearch, currentPage, "NAME", contentSearch);
+      getPlayer(contentSearch, currentPage, "NAME", contentSearch);
       setCheck(!check);
     };
   
@@ -77,22 +78,29 @@ function ManagePlayer() {
           let ordertype = null;
           let orderby = null;
           if (value === "nameDesc") {
-            orderby = "TeamName";
+            orderby = "PlayerName";
             ordertype = "ASC";
           } else if (value === "nameIns") {
-            orderby = "TeamName";
+            orderby = "PlayerName";
             ordertype = "DESC";
           }
           setOrderBy(orderby);
           setOrderType(ordertype);
   
-          getTeam(contentSearch, currentPage, "SORT", orderby + "-" + ordertype);
+          getPlayer(contentSearch, currentPage, "SORT", orderby + "-" + ordertype);
           setSort(value === "default" ? "" : value);
           break;
         default:
           break;
       }
     };
+    const changePosition = (data) => {
+      if (data === "goalkeeper") return "Thủ môn";
+      else if (data === "defender") return "Hậu vệ";
+      else if (data === "midfielder") return "Tiền vệ";
+      else return "Tiền đạo";
+    };
+
     return (
       <>
         <ScrollToTop />
@@ -100,13 +108,13 @@ function ManagePlayer() {
         <HeaderLeft />
         <div className={styles.manage}>
           <div className={styles.title}>
-            <h2 className={styles.title__left}>Quản lý đội bóng</h2>
+            <h2 className={styles.title__left}>Quản lý cầu thủ</h2>
             <div className={styles.title__location}>
               <Link to={"/"} className={styles.another__location}>
                 <i className="fa-solid fa-house"></i> Trang chủ
               </Link>
               <span>{">>"}</span>
-              <Link to={"/manageTeam"} className="current__location">
+              <Link to={"/managePlayer"} className="current__location">
                 Quản lý cầu thủ
               </Link>
             </div>
@@ -155,26 +163,19 @@ function ManagePlayer() {
                 openGrid ? styles.teamList : `${styles.teamList} ${styles.active}`
               }
             >
-              {team.length !== 0 ? (
-                team.map((item) => (
+              {player.length !== 0 ? (
+                player.map((item) => (
                   <div className={styles.teamItem} key={item.id}>
                     <div className={styles.itemImage}>
-                      <img src={item.teamAvatar} alt={item.teamName} />
+                      <img src={item.playerAvatar} alt={item.playerName} />
                     </div>
                     <div className={styles.itemText}>
-                      <div className={styles.nameTeam}>{item.teamName}</div>
+                      <div className={styles.nameTeam}>{item.playerName}</div>
                       <div className={styles.descriptionTeam}>
-                        Bóng Đá {item.teamGender === "Male" ? "Nam" : "Nữ"}{" "}
-                        {item.teamArea !== ""
-                          ? "| " + splitTeamArea(item.teamArea)
-                          : ""}
-                      </div>
-                      <div className={styles.numberPlayer}>
-                        <i className="fa-solid fa-user-group"></i>
-                        <span>{item.numberPlayerInTeam}</span>
+                        {item.gender  === "Male" ? "Nam" : "Nữ"} | {changePosition(item.position)}
                       </div>
                       <Link
-                        to={`/teamDetail/${item.id}`}
+                        to={`/playerDetail/${item.id}`}
                         className={styles.viewDetail}
                       >
                         <i class="fa-solid fa-pen-to-square"></i>Xem thêm
@@ -183,7 +184,7 @@ function ManagePlayer() {
                   </div>
                 ))
               ) : (
-                <p className={styles.noItem}>Không tìm thấy đội bóng</p>
+                <p className={styles.noItem}>Không tìm thấy cầu thủ</p>
               )}
             </div>
             <ReactPaginate

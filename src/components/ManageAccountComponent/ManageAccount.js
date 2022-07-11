@@ -116,6 +116,7 @@ function ManageAccount() {
       day.getFullYear()
     );
   };
+
   useEffect(() => {
     getAccount(contentSearch, currentPage, "NAME", contentSearch);
   }, [check, currentPage]);

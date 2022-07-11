@@ -111,6 +111,7 @@
 }
 
 .text input,
+.text p,
 .text select {
   font-family: "Mulish-Regular";
   font-size: 18px;
@@ -121,6 +122,11 @@
   outline: none;
   border: none;
   border: 1px solid #ccc;
+}
+
+.text p {
+  padding-top: 17.5px;
+  padding-bottom: 17.5px;
 }
 
 .text select {
@@ -162,7 +168,7 @@
 
 .team__wrap{
     margin-top: 20px;
-    height: 370px;
+    max-height: 370px;
     overflow-y: scroll;
 }
 
@@ -170,6 +176,10 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
+}
+
+.team__wrap a:hover p{
+  color: var(--green-bold);
 }
 .team__wrap p{
     display: flex;

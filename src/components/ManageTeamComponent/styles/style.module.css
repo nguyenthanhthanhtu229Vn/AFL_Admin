@@ -196,6 +196,7 @@
   -webkit-line-clamp: 1;
   display: -webkit-box;
   overflow: hidden;
+  height: 27px;
 }
 
 .descriptionTeam {

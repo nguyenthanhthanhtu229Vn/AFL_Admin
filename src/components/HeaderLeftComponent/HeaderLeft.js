@@ -119,7 +119,7 @@ function HeaderLeft(id) {
                   to={"/managePlayer"}
                   onClick={() => setactiveMenu("/managePlayer")}
                   className={
-                    activeMenu === "/managePlayer" ? styles.active : ""
+                    activeMenu === "/managePlayer"||activeMenu===`/playerDetail/${id.id}` ? styles.active : ""
                   }
                 >
                   Quản lý cầu thủ

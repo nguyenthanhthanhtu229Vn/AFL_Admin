@@ -192,15 +192,20 @@
   -webkit-line-clamp: 1;
   display: -webkit-box;
   overflow: hidden;
+  height: 27px;
 }
 
 .descriptionTeam {
   font-size: 16px;
   margin-bottom: 15px;
-  max-height: 15px;
+  height: 18px;
+  margin-left: auto;
+  margin-right: auto;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   display: -webkit-box;
+  max-width: 250px;
+  overflow: hidden;
 }
 
 .viewDetail {
@@ -279,6 +284,8 @@
 .teamList.active .descriptionTeam {
   font-size: 18px;
   margin-bottom: 25px;
+  max-width: initial;
+  overflow: initial;
 }
 
 .noItem{

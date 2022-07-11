@@ -30,6 +30,7 @@ function AccountDetail() {
   useEffect(() => {
     getAccount();
   }, [check]);
+
   // format Date
   const formatDate = (date) => {
     const day = new Date(date);
@@ -73,7 +74,7 @@ function AccountDetail() {
     }
   };
 
-  const HandleClick = (status,id) => {
+  const HandleClick = (status, id) => {
     Swal.fire({
       title: "Bạn chắc chứ?",
       text: status ? "Chặn tài khoản này" : "Bỏ chặn tài khoản",
@@ -89,9 +90,25 @@ function AccountDetail() {
     }).then((result) => {
       if (result.isConfirmed) {
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        changeStatusUser(id)
+        changeStatusUser(id);
       }
     });
+  };
+
+  // format DateTime
+  const formatDateTime = (date) => {
+    const day = new Date(date);
+    return (
+      String(day.getHours()).padStart(2, "0") +
+      ":" +
+      String(day.getMinutes()).padStart(2, "0") +
+      " - " +
+      String(day.getDate()).padStart(2, "0") +
+      "/" +
+      String(day.getMonth() + 1).padStart(2, "0") +
+      "/" +
+      day.getFullYear()
+    );
   };
   return (
     <>
@@ -122,7 +139,8 @@ function AccountDetail() {
           <div className={styles.content__left}>
             <img src={account.avatar} alt={account.username} />
             <div className={styles.function}>
-              <span className={styles.link}
+              <span
+                className={styles.link}
                 onClick={() => HandleClick(account.status, account.id)}
               >
                 {account.status ? "Chặn tài khoản" : "Bỏ chặn tài khoản"}
@@ -241,7 +259,7 @@ function AccountDetail() {
               </div>
               <div className={styles.text}>
                 <label htmlFor="dateCreate">Ngày tạo tài khoản</label>
-                <p>{formatDate(account.dateCreate)}</p>
+                <p>{formatDateTime(account.dateCreate)}</p>
               </div>
             </form>
             <Link to={"/manageAccount"} className={styles.button}>
