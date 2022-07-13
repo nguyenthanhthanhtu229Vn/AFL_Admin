@@ -9,24 +9,29 @@ function HeaderLeft(id) {
   const [openReport, setOpenReport] = useState(true);
   const [openExten, setOpenExten] = useState(true);
   const [clickUserMenu, setClickUserMenu] = useState(false);
- const [myAccount, setMyAccount] = useState( JSON.parse(localStorage.getItem("userInfo")))
-  const [user, setUser] = useState("")
-    //Get User
-    const getUserById = async () => {
-      let afterDefaultURL = `users/${myAccount.userVM.id}`;
-      let response = getAPI(afterDefaultURL);
-      response
-        .then((res) => {
-          setUser(res.data);
-        })
-        .catch((err) => console.error(err));
-    };
+  const [myAccount, setMyAccount] = useState(
+    JSON.parse(localStorage.getItem("userInfo"))
+  );
+  const [user, setUser] = useState("");
+  //Get User
+  const getUserById = async () => {
+    let afterDefaultURL = `users/${myAccount.userVM.id}`;
+    let response = getAPI(afterDefaultURL);
+    response
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => console.error(err));
+  };
   // signout
   const signout = () => {
     localStorage.removeItem("userInfo");
     window.location.reload();
   };
   useEffect(() => {
+    window.addEventListener("click", () => {
+      setClickUserMenu(false);
+    });
     setactiveMenu(location.pathname);
     getUserById();
   }, [location]);
@@ -70,7 +75,7 @@ function HeaderLeft(id) {
             </p>
             {openManage ? (
               <>
-              <Link
+                <Link
                   to={"/manageAccount"}
                   onClick={() => setactiveMenu("/manageAccount")}
                   className={
@@ -119,7 +124,10 @@ function HeaderLeft(id) {
                   to={"/managePlayer"}
                   onClick={() => setactiveMenu("/managePlayer")}
                   className={
-                    activeMenu === "/managePlayer"||activeMenu===`/playerDetail/${id.id}` ? styles.active : ""
+                    activeMenu === "/managePlayer" ||
+                    activeMenu === `/playerDetail/${id.id}`
+                      ? styles.active
+                      : ""
                   }
                 >
                   Quản lý cầu thủ
@@ -188,12 +196,12 @@ function HeaderLeft(id) {
         <div className={styles.right}>
           <div
             className={styles.myAccount}
-            onClick={() => setClickUserMenu(!clickUserMenu)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setClickUserMenu(!clickUserMenu);
+            }}
           >
-            <img
-              src={user.avatar}
-              alt={user.username}
-            />
+            <img src={user.avatar} alt={user.username} />
             <p>{user.username}</p>
             <i className="fa-solid fa-caret-down"></i>
           </div>

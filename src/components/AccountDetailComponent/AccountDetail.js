@@ -147,6 +147,46 @@ function AccountDetail() {
               </span>
               {/* <a href="#">Xóa tài khoản</a> */}
             </div>
+            <div className={styles.content__leftdown}>
+              <h2>Số cờ tài khoản</h2>
+              <span className={styles.note}>
+                *Số cờ này là đánh dấu những tài khoản bị báo cáo quá nhiều ảnh
+                hưởng hệ thống.
+              </span>
+              <div className={styles.team__wrap}>
+                <p>Loại cờ</p>
+                <p
+                  className={
+                    account.flagReportTournament >= 10 ? styles.red : null
+                  }
+                >
+                  <span>
+                    <i class="fa-solid fa-flag"></i> Cầu thủ
+                  </span>
+                  <span>{account.flagReportFootballPlayer}</span>
+                </p>
+                <p
+                  className={
+                    account.flagReportTournament >= 10 ? styles.red : null
+                  }
+                >
+                  <span>
+                    <i class="fa-solid fa-flag"></i> Đội bóng
+                  </span>
+                  <span>{account.flagReportTeam}</span>
+                </p>
+                <p
+                  className={
+                    account.flagReportTournament >= 10 ? styles.red : null
+                  }
+                >
+                  <span>
+                    <i class="fa-solid fa-flag"></i> Giải đấu
+                  </span>
+                  <span>{account.flagReportTournament}</span>
+                </p>
+              </div>
+            </div>
           </div>
           <div className={styles.content__right}>
             <h2>Thông tin tài khoản</h2>
