@@ -15,6 +15,7 @@ function ManageReport() {
   const [flagItem, setFlagItem] = useState({ item: [], user: [] });
   const [popUpFlag, setPopUpFlag] = useState(false);
   const [account, setAccount] = useState([]);
+  const [tournament, setTournament] = useState([])
   const [contentSearch, setContentSearch] = useState("");
   const [statusSearch, setStatusSearch] = useState("Chưa duyệt");
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,6 +48,7 @@ function ManageReport() {
   useEffect(() => {
     getListReport(contentSearch, currentPage, statusSearch, reportType);
     getAccount();
+    getTournament();
   }, [check, currentPage, reportType]);
 
   const handlePageClick = (data) => {
@@ -229,12 +231,42 @@ function ManageReport() {
         setLoading(false);
       });
   };
+  const getTournament = () => {
+    setLoading(true);
+    let afterDefaultURL = `tournaments?page-offset=1&limit=250`;
+    let response = getAPI(afterDefaultURL);
+    response
+      .then((res) => {
+        setTournament(res.data.tournaments);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  };
 
+  const checkTournament = (id) => {
+    let item ="";
+    if (tournament.length > 0) {
+      for (let i = 0; i < tournament.length; i++) {
+        if (tournament[i].id === id) {
+          item = tournament[i].userId;
+          break;
+        }
+      }
+    }
+    return item;
+  };
   const checkAccount = (id) => {
-    let item = null;
-    for (let i = 0; i < account.length; i++) {
-      if (account[i].id === id) {
-        item = account[i];
+    let item = [];
+    if (account.length > 0) {
+      for (let i = 0; i < account.length; i++) {
+        if (account[i].id === id) {
+          item = account[i];
+          console.log(item)
+          break;
+        }
       }
     }
     return item;
@@ -592,14 +624,14 @@ function ManageReport() {
                             }
                           >
                             {item.tournamentId !== 0
-                              ? checkAccount(item.tournamentId).username
+                              ? checkAccount(checkTournament(item.tournamentId)).username
                               : item.teamId !== 0
                               ? checkAccount(item.teamId).username
                               : checkAccount(item.footballPlayerId).username}
                             <img
                               src={
                                 item.tournamentId !== 0
-                                  ? checkAccount(item.tournamentId).avatar
+                                  ? checkAccount(checkTournament(item.tournamentId)).avatar
                                   : item.teamId !== 0
                                   ? checkAccount(item.teamId).avatar
                                   : checkAccount(item.footballPlayerId).avatar
@@ -632,7 +664,7 @@ function ManageReport() {
                                   item: item,
                                   user:
                                     item.tournamentId !== 0
-                                      ? checkAccount(item.tournamentId)
+                                      ? checkAccount(checkTournament(item.tournamentId))
                                       : item.teamId !== 0
                                       ? checkAccount(item.teamId)
                                       : checkAccount(item.footballPlayerId),
@@ -644,7 +676,7 @@ function ManageReport() {
                             </div>
                             <div className={styles.hide}>Gắn cờ người</div>
                             {(item.tournamentId !== 0
-                              ? checkAccount(item.tournamentId)
+                              ? checkAccount(checkTournament(item.tournamentId))
                                   .flagReportTournament
                               : item.teamId !== 0
                               ? checkAccount(item.teamId).flagReportTeam
