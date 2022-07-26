@@ -6,16 +6,20 @@ import LoadingAction from "../LoadingComponent/LoadingAction";
 import LoadingCircle from "../LoadingComponent/LoadingCircle";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
+import { getReportByTournamentIdAPI } from "../../api/ReportAPI";
+import ReactPaginate from "react-paginate";
 function TourDetail() {
   const { idTour } = useParams();
   const [tournament, setTournament] = useState([]);
   const [host, setHost] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingSke, setLoadingSke] = useState(false);
-  const [teams, setTeams] = useState([])
+  const [teams, setTeams] = useState([]);
   const [limit, setLimit] = useState(6);
   const [allTeam, setAllTeam] = useState([]);
   const [height, setHeight] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [report, setReport] = useState(null);
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -54,7 +58,21 @@ function TourDetail() {
         console.error(err);
       });
   };
-
+  const changeDate = (data) => {
+    const date = data.split(" ")[0];
+    console.log(data);
+    return (
+      date.split("/")[1] +
+      "/" +
+      date.split("/")[0] +
+      "/" +
+      date.split("/")[2] +
+      " " +
+      data.split(" ")[1].split(":")[0] +
+      ":" +
+      data.split(" ")[1].split(":")[1]
+    );
+  };
   //Get User
   const getUserById = async (id) => {
     let afterDefaultURL = `users/${id}`;
@@ -101,6 +119,26 @@ function TourDetail() {
     getTeam();
   }, []);
 
+  useEffect(() => {
+    getReportByTourID();
+  }, [currentPage]);
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected + 1);
+  };
+
+  const getReportByTourID = async () => {
+    try {
+      const response = await getReportByTournamentIdAPI(idTour, currentPage);
+
+      if (response.status === 200) {
+        setReport(response.data);
+        console.log(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   // format DateTime
   const formatDateTime = (date) => {
     const day = new Date(date);
@@ -136,19 +174,19 @@ function TourDetail() {
     }
   };
 
-  const checkTeam=(item)=>{
-    let a=[];
-    if(teams.length>0){
-      for(let i=0;i<teams.length;i++){
-        if(teams[i].id===item.teamId){
-          console.log("first")
-          a= teams[i];
+  const checkTeam = (item) => {
+    let a = [];
+    if (teams.length > 0) {
+      for (let i = 0; i < teams.length; i++) {
+        if (teams[i].id === item.teamId) {
+          console.log("first");
+          a = teams[i];
           break;
         }
       }
     }
     return a;
-  }
+  };
   return (
     <>
       <ScrollToTop />
@@ -157,6 +195,7 @@ function TourDetail() {
       <div className={styles.manage}>
         <div className={styles.title}>
           <h2 className={styles.title__left}>{tournament.tournamentName}</h2>
+
           <div className={styles.title__location}>
             <Link to={"/"} className={styles.another__location}>
               <i className="fa-solid fa-house"></i> Trang chủ
@@ -171,6 +210,17 @@ function TourDetail() {
             </Link>
           </div>
         </div>
+        {report !== null && report.countList > 0 ? (
+          <h2
+            style={{
+              color: "red",
+              marginTop: 30,
+              fontSize: 24,
+            }}
+          >
+            Có {report.countList} báo cáo về giải đấu này
+          </h2>
+        ) : null}
         <div className={styles.content}>
           <div>
             <div className={styles.content__left}>
@@ -191,13 +241,13 @@ function TourDetail() {
                   infiniteScroll(e);
                 }}
               >
-                   {allTeam.length !== 0 ? (
+                {allTeam.length !== 0 ? (
                   <>
                     <p>Tên đội bóng</p>
-                    {allTeam.map((item,index) => (
+                    {allTeam.map((item, index) => (
                       <>
                         <Link to={`/teamDetail/${item.teamId}`} key={item.id}>
-                          <p >
+                          <p>
                             {checkTeam(item).teamName}
                             <img
                               src={checkTeam(item).teamAvatar}
@@ -374,6 +424,87 @@ function TourDetail() {
               Hoàn tất
             </Link>
           </div>
+        </div>
+        <div
+          style={{
+            marginTop: 30,
+          }}
+        >
+          <h2
+            style={{
+              fontSize: 24,
+            }}
+          >
+            Thông tin hủy giải từ chủ giải đấu
+          </h2>
+        </div>
+        <div
+          style={{
+            marginTop: 30,
+          }}
+        >
+          <h2
+            style={{
+              fontSize: 24,
+            }}
+          >
+            Thông tin báo cáo của giải đấu
+          </h2>
+
+          {report !== null ? (
+            <div>
+              <table
+                style={{
+                  color: "white",
+                  marginTop: 30,
+                }}
+                class="table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Lí do</th>
+                    <th scope="col">Ngày báo cáo</th>
+                    <th scope="col">Từ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {report.reports.map((item, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{item.reason}</td>
+                        <td>{changeDate(item.dateReport)}</td>
+                        <td>{item.user.email}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <ReactPaginate
+                previousLabel={"Trang trước"}
+                nextLabel={"Trang sau"}
+                containerClassName="pagination"
+                activeClassName={styles.active}
+                pageClassName={styles.pageItem}
+                nextClassName={styles.pageItem}
+                previousClassName={styles.pageItem}
+                breakLabel={"..."}
+                pageCount={Math.ceil(report.countList / 10)}
+                marginPagesDisplayed={3}
+                onPageChange={handlePageClick}
+                pageLinkClassName={styles.pagelink}
+                previousLinkClassName={styles.pagelink}
+                nextLinkClassName={styles.pagelink}
+                breakClassName={styles.pageItem}
+                breakLinkClassName={styles.pagelink}
+                pageRangeDisplayed={2}
+                className={styles.pagingTournament}
+              />
+            </div>
+          ) : (
+            <h1>Giải đấu chưa nhận được báo cáo nào</h1>
+          )}
         </div>
       </div>
     </>

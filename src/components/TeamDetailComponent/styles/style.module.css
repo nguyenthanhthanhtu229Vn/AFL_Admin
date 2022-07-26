@@ -201,3 +201,46 @@
   background-color: #ccc;
   position: absolute;
 }
+
+.pageItem {
+  margin-top: 15px;
+  margin-left: 20px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: max-content;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.pageItem.active,
+.pageItem:hover {
+  background-color: var(--green-bold);
+  color: var(--black-text);
+  border: 1px solid transparent;
+}
+
+.pageItem:hover .pagelink {
+  color: var(--blue-black);
+}
+
+.pagelink {
+  color: var(--white-text);
+  display: inline-block;
+  padding: 10px 15px;
+}
+.pagingTournament {
+  width: max-content;
+  margin: 0 auto;
+  margin-top: 20px;
+  /* margin-bottom: 30px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pageItem.active,
+.pageItem:hover {
+  background-color: var(--green-bold);
+  color: var(--black-text);
+  border: 1px solid transparent;
+}

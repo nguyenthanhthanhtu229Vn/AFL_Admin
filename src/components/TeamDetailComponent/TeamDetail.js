@@ -7,6 +7,8 @@ import LoadingAction from "../LoadingComponent/LoadingAction";
 import LoadingCircle from "../LoadingComponent/LoadingCircle";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
+import { getReportByTeamIdAPI } from "../../api/ReportAPI";
+import ReactPaginate from "react-paginate";
 function TeamDetail() {
   const { idTeam } = useParams();
   const [team, setTeam] = useState([]);
@@ -16,6 +18,8 @@ function TeamDetail() {
   const [limit, setLimit] = useState(6);
   const [allTeam, setAllTeam] = useState([]);
   const [height, setHeight] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [report, setReport] = useState(null);
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -75,6 +79,44 @@ function TeamDetail() {
   useEffect(() => {
     getTeamByIdPlayer();
   }, [limit]);
+
+  useEffect(() => {
+    getReportByTeamID();
+  }, [currentPage]);
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected + 1);
+  };
+
+  const getReportByTeamID = async () => {
+    try {
+      const response = await getReportByTeamIdAPI(idTeam, currentPage);
+
+      if (response.status === 200) {
+        setReport(response.data);
+        console.log(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const changeDate = (data) => {
+    const date = data.split(" ")[0];
+    console.log(data);
+    return (
+      date.split("/")[1] +
+      "/" +
+      date.split("/")[0] +
+      "/" +
+      date.split("/")[2] +
+      " " +
+      data.split(" ")[1].split(":")[0] +
+      ":" +
+      data.split(" ")[1].split(":")[1]
+    );
+  };
+
   // format DateTime
   const formatDateTime = (date) => {
     const day = new Date(date);
@@ -113,6 +155,17 @@ function TeamDetail() {
             </Link>
           </div>
         </div>
+        {report !== null && report.countList > 0 ? (
+          <h2
+            style={{
+              color: "red",
+              marginTop: 30,
+              fontSize: 24,
+            }}
+          >
+            Có {report.countList} báo cáo về đội bóng này
+          </h2>
+        ) : null}
         <div className={styles.content}>
           <div>
             <div className={styles.content__left}>
@@ -135,10 +188,13 @@ function TeamDetail() {
                 {allTeam.length !== 0 ? (
                   <>
                     <p>Họ và tên</p>
-                    {allTeam.map((item,index) => (
+                    {allTeam.map((item, index) => (
                       <>
-                        <Link to={`/playerDetail/${item.footballPlayerId}`} key={item.id}>
-                          <p >
+                        <Link
+                          to={`/playerDetail/${item.footballPlayerId}`}
+                          key={item.id}
+                        >
+                          <p>
                             {item.footballPlayer.playerName}
                             <img
                               src={item.footballPlayer.playerAvatar}
@@ -246,6 +302,74 @@ function TeamDetail() {
               Hoàn tất
             </Link>
           </div>
+        </div>
+        <div
+          style={{
+            marginTop: 30,
+          }}
+        >
+          <h2
+            style={{
+              fontSize: 24,
+            }}
+          >
+            Thông tin báo cáo của đội bóng
+          </h2>
+
+          {report !== null ? (
+            <div>
+              <table
+                style={{
+                  color: "white",
+                  marginTop: 30,
+                }}
+                class="table"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Lí do</th>
+                    <th scope="col">Ngày báo cáo</th>
+                    <th scope="col">Từ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {report.reports.map((item, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{item.reason}</td>
+                        <td>{changeDate(item.dateReport)}</td>
+                        <td>{item.user.email}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <ReactPaginate
+                previousLabel={"Trang trước"}
+                nextLabel={"Trang sau"}
+                containerClassName="pagination"
+                activeClassName={styles.active}
+                pageClassName={styles.pageItem}
+                nextClassName={styles.pageItem}
+                previousClassName={styles.pageItem}
+                breakLabel={"..."}
+                pageCount={Math.ceil(report.countList / 10)}
+                marginPagesDisplayed={3}
+                onPageChange={handlePageClick}
+                pageLinkClassName={styles.pagelink}
+                previousLinkClassName={styles.pagelink}
+                nextLinkClassName={styles.pagelink}
+                breakClassName={styles.pageItem}
+                breakLinkClassName={styles.pagelink}
+                pageRangeDisplayed={2}
+                className={styles.pagingTournament}
+              />
+            </div>
+          ) : (
+            <h1>Đội bóng chưa nhận được báo cáo nào</h1>
+          )}
         </div>
       </div>
     </>

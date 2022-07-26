@@ -17,6 +17,48 @@
 .another__location {
   color: var(--green-bold);
 }
+.pageItem {
+  margin-top: 15px;
+  margin-left: 20px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: max-content;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.pageItem.active,
+.pageItem:hover {
+  background-color: var(--green-bold);
+  color: var(--black-text);
+  border: 1px solid transparent;
+}
+
+.pageItem:hover .pagelink {
+  color: var(--blue-black);
+}
+
+.pagelink {
+  color: var(--white-text);
+  display: inline-block;
+  padding: 10px 15px;
+}
+.pagingTournament {
+  width: max-content;
+  margin: 0 auto;
+  margin-top: 20px;
+  /* margin-bottom: 30px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pageItem.active,
+.pageItem:hover {
+  background-color: var(--green-bold);
+  color: var(--black-text);
+  border: 1px solid transparent;
+}
 
 .title__location span {
   margin-left: 10px;
@@ -154,54 +196,53 @@
   filter: brightness(90%);
 }
 
-
-.content__leftdown{
-    margin-top: 20px;
-    background-color: var(--blue-black);
-    padding: 30px 15px;
+.content__leftdown {
+  margin-top: 20px;
+  background-color: var(--blue-black);
+  padding: 30px 15px;
 }
 
-.content__leftdown h2{
-    font-family: "Mulish-Bold";
-    font-size: 24px;
+.content__leftdown h2 {
+  font-family: "Mulish-Bold";
+  font-size: 24px;
 }
 
-.team__wrap{
-    margin-top: 20px;
-    max-height: 370px;
-    overflow-y: scroll;
+.team__wrap {
+  margin-top: 20px;
+  max-height: 370px;
+  overflow-y: scroll;
 }
 
-.team__wrap p img{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+.team__wrap p img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
-.team__wrap a:hover p{
+.team__wrap a:hover p {
   color: var(--green-bold);
 }
-.team__wrap p{
-    display: flex;
-    position: relative;
-    align-items: center;
-    justify-content: space-between;
+.team__wrap p {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
 }
-.content__leftdown p:first-child{
-    font-size: 18px;
-    color: var(--white-text);
+.content__leftdown p:first-child {
+  font-size: 18px;
+  color: var(--white-text);
 }
-.content__leftdown p{
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #ccc;
+.content__leftdown p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #ccc;
 }
-.content__leftdown p::after{
-    bottom: -10px;
-    display: block;
-    content: "";
-    width: 100%;
-    height: 1px;
-    background-color: #ccc;
-    position: absolute;
+.content__leftdown p::after {
+  bottom: -10px;
+  display: block;
+  content: "";
+  width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  position: absolute;
 }
