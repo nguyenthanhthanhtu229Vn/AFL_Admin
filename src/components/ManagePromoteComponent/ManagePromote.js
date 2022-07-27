@@ -173,7 +173,7 @@ function ManagePromote() {
         data
       );
       if (response.status === 200) {
-        sendmail(item.id, status, item);
+        sendNotification(item, status, reasonVal);
       }
     } catch (error) {
       toast.error(error.response.data.message, {
@@ -187,6 +187,38 @@ function ManagePromote() {
       });
       setloading(false);
       console.error(error.response);
+    }
+  };
+
+  const sendNotification = async (item, status, reasonVal) => {
+    setloading(true);
+    const data = {
+      content:
+        status === "Đã duyệt"
+          ? "Chúc mừng bạn đã thăng cấp lên người tạo giải đấu"
+          : "Bạn đã bị từ chối thăng cấp giải đấu với lý do: " + reasonVal,
+      userId: item.userId,
+    };
+    try {
+      const response = await axios.post(
+        `https://afootballleague.ddns.net/api/v1/notifications`,
+        data
+      );
+      if (response.status === 201) {
+        sendmail(item.id, status, reasonVal);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      console.error(error.response);
+      setloading(false);
     }
   };
 

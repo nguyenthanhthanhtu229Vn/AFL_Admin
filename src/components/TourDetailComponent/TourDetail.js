@@ -425,41 +425,15 @@ function TourDetail() {
             </Link>
           </div>
         </div>
-        <div
-          style={{
-            marginTop: 30,
-          }}
-        >
-          <h2
-            style={{
-              fontSize: 24,
-            }}
-          >
-            Thông tin hủy giải từ chủ giải đấu
-          </h2>
+        <div className={styles.wrapReport}>
+          <h2>Thông tin hủy giải từ chủ giải đấu</h2>
         </div>
-        <div
-          style={{
-            marginTop: 30,
-          }}
-        >
-          <h2
-            style={{
-              fontSize: 24,
-            }}
-          >
-            Thông tin báo cáo của giải đấu
-          </h2>
+        <div className={styles.wrapReport}>
+          <h2>Thông tin báo cáo của giải đấu</h2>
 
           {report !== null ? (
             <div>
-              <table
-                style={{
-                  color: "white",
-                  marginTop: 30,
-                }}
-                class="table"
-              >
+              <table className={styles.table}>
                 <thead>
                   <tr>
                     <th scope="col">STT</th>
