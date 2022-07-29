@@ -206,34 +206,46 @@ function TeamDetail() {
                   Xóa đội bóng
                 </a>
               </div>
+              {manager !== null && manager.flagReportTeam >= 3 ? (
+                manager.status === true ? (
+                  <FlagUserComponet user={manager} getUserById={getUserById} />
+                ) : (
+                  <div>
+                    <h1
+                      style={{
+                        color: "red",
+                        fontSize: 24,
+                        margin: "10px 0",
+                      }}
+                    >
+                      Cảnh báo
+                    </h1>
+                    <p
+                      style={{
+                        lineHeight: 1.2,
+                        fontSize: 20,
+                      }}
+                    >
+                      Tài khoản chủ sở hữu đội bóng đã bị khóa
+                    </p>
+                  </div>
+                )
+              ) : (
+                <div>
+                  <h1
+                     className={styles.titleWarning}
+                  >
+                    Cảnh báo
+                  </h1>
+                  <p
+                    className={styles.contentWarning}
+                  >
+                    Khi chủ đội bóng bị dánh cờ nhiều hơn 3 lần, chặn tài khoản
+                    sẽ xuất hiện
+                  </p>
+                </div>
+              )}
             </div>
-            {
-              manager !== null && manager.flagReportTeam >= 3 ? 
-              manager.status === true ? 
-              <FlagUserComponet user={manager} getUserById={getUserById} /> : <div>
-              <h1 style={{
-              color:"red",
-              fontSize: 24,
-              margin: "10px 0",
-          }}>Cảnh báo</h1>
-              <p style={{
-              lineHeight: 1.2,
-              fontSize: 20,
-              
-          }}>Tài khoản chủ sở hữu đội bóng đã bị khóa</p>
-            </div> : <div>
-                <h1 style={{
-                color:"red",
-                fontSize: 24,
-                margin: "10px 0",
-            }}>Cảnh báo</h1>
-                <p style={{
-                lineHeight: 1.2,
-                fontSize: 20,
-                
-            }}>Khi chủ đội bóng bị dánh cờ nhiều hơn 3 lần, chặn tài khoản sẽ xuất hiện</p>
-              </div>
-            }
             <div className={styles.content__leftdown}>
               <h2>Thành viên</h2>
               <div

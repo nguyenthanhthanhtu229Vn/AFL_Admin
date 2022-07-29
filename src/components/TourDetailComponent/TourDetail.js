@@ -64,7 +64,7 @@ function TourDetail() {
   };
   const changeDate = (data) => {
     const date = data.split(" ")[0];
-    
+
     return (
       date.split("/")[1] +
       "/" +
@@ -183,7 +183,6 @@ function TourDetail() {
     if (teams.length > 0) {
       for (let i = 0; i < teams.length; i++) {
         if (teams[i].id === item.teamId) {
-          
           a = teams[i];
           break;
         }
@@ -211,9 +210,9 @@ function TourDetail() {
         id: host.id,
         flagReportTournament: host.flagReportTournament + 1,
       };
-      
+
       const response = await takeFlagForUserAPI(data);
-      if(response.status === 201){
+      if (response.status === 201) {
         getUserById(host.id);
         toast.success("Gắn cờ giải đấu thành công", {
           position: "top-right",
@@ -276,13 +275,6 @@ function TourDetail() {
                   >
                     Hủy giải đấu
                   </a>
-                  <a
-                    onClick={() => {
-                      cancleTournament();
-                    }}
-                  >
-                    Xóa giải đấu
-                  </a>
                 </div>
               ) : (
                 <div className={styles.function}>
@@ -291,39 +283,44 @@ function TourDetail() {
                       cancleTournament();
                     }}
                   >
-                    Giải đã bị hủy 
+                    Giải đã bị hủy
                   </a>
-
+                </div>
+              )}
+              {host !== null && host.flagReportTournament >= 3 ? (
+                host.status === true ? (
+                  <FlagUserComponet user={host} getUserById={getUserById} />
+                ) : (
+                  <div>
+                    <h1
+                      style={{
+                        color: "red",
+                        fontSize: 24,
+                        margin: "10px 0",
+                      }}
+                    >
+                      Cảnh báo
+                    </h1>
+                    <p
+                      style={{
+                        lineHeight: 1.2,
+                        fontSize: 20,
+                      }}
+                    >
+                      Tài khoản chủ sở hữu giải đấu đã bị khóa
+                    </p>
+                  </div>
+                )
+              ) : (
+                <div>
+                  <h1 className={styles.titleWarning}>Cảnh báo</h1>
+                  <p className={styles.contentWarning}>
+                    Khi chủ giải đấu bị dánh cờ nhiều hơn 3 giải đấu khác nhau ,
+                    chặn tài khoản sẽ xuất hiện
+                  </p>
                 </div>
               )}
             </div>
-            {
-              host !== null && host.flagReportTournament >= 3 ? 
-              host.status === true ? 
-              <FlagUserComponet user={host} getUserById={getUserById} /> : <div>
-              <h1 style={{
-              color:"red",
-              fontSize: 24,
-              margin: "10px 0",
-          }}>Cảnh báo</h1>
-              <p style={{
-              lineHeight: 1.2,
-              fontSize: 20,
-              
-          }}>Tài khoản chủ sở hữu giải đấu đã bị khóa</p>
-            </div> : <div>
-                <h1 style={{
-                color:"red",
-                fontSize: 24,
-                margin: "10px 0",
-            }}>Cảnh báo</h1>
-                <p style={{
-                lineHeight: 1.2,
-                fontSize: 20,
-                
-            }}>Khi chủ giải đấu bị dánh cờ nhiều hơn 3 giải đấu khác nhau , chặn tài khoản sẽ xuất hiện</p>
-              </div>
-            }
             <div className={styles.content__leftdown}>
               <h2>Đội bóng tham gia</h2>
               <div

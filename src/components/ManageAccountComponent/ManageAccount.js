@@ -231,12 +231,12 @@ function ManageAccount() {
                     >
                       Xem
                     </Link>
-                    <span
+                    {/* <span
                       className={styles.block}
                       onClick={() => HandleClick(item.status,item.id)}
                     >
                       {item.status ? "Chặn" : "Bỏ chặn"}
-                    </span>
+                    </span> */}
                   </td>
                 </tr>
               ))

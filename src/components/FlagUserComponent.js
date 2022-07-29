@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { setDefaults } from "react-i18next";
+import styles from "./TourDetailComponent/styles/style.module.css";
 import { blockUserAPI } from "../api/UserAPI";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { toast } from "react-toastify";
+import LoadingAction from "./LoadingComponent/LoadingAction";
 export default function FlagUserComponet(props) {
   const { user, getUserById } = props;
   const [fault, setFault] = useState(null);
+  const [loading, setLoading] = useState(false);
   const defaultFault = [
     {
       id: 1,
@@ -24,7 +29,7 @@ export default function FlagUserComponet(props) {
     },
     {
       id: 5,
-      name: "Vĩnh Viển",
+      name: "Vĩnh viễn",
     },
   ];
   const [blockIndex, setBlockIndex] = useState(null);
@@ -41,11 +46,34 @@ export default function FlagUserComponet(props) {
     countFault();
   }, []);
 
+  const HandleClick = () => {
+    Swal.fire({
+      title: "Bạn chắc chứ?",
+      text: "Chặn tài khoản này",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5fe37d",
+      cancelButtonColor: "#b80e4e",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      customClass: {
+        icon: styles.no_before_icon,
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        blockAccount();
+      }
+    });
+  };
+
   const blockAccount = async () => {
+    setLoading(true);
     try {
       const response = await blockUserAPI(user.id, +blockIndex);
       console.log(response);
       if (response.status === 200) {
+        setLoading(false);
         getUserById(user.id);
         toast.success("Chặn tài khoản thành công", {
           position: "top-right",
@@ -58,29 +86,21 @@ export default function FlagUserComponet(props) {
         });
       }
     } catch (err) {
+      setLoading(false);
       console.error(err);
     }
   };
   return (
-    <div>
-      <h1
-        style={{
-          color: "red",
-          fontSize: 24,
-          margin: "10px 0",
-        }}
-      >
-        Chặn tài khoản
-      </h1>
+    <div className={styles.wrapBlocker}>
+      {loading ? <LoadingAction /> : null}
+      <h1 className={styles.titleBlock}>Chặn tài khoản</h1>
       {/* {
                 user.countBlock > 0 ? "Tài khoản này đã bị khóa" + user.countBlock + " lần" : "Tài khoản chưa bị khóa lần nào"
             } */}
       <select
-        style={{
-          padding: "10px 30px",
-        }}
         onChange={onChangeHandler}
         value={blockIndex}
+        className={styles.selectBlock}
       >
         <option value="-1">Chọn hình phạt</option>
         {fault !== null
@@ -94,18 +114,11 @@ export default function FlagUserComponet(props) {
           : null}
       </select>
       {blockIndex !== null && blockIndex != -1 ? (
-        <div
-          style={{
-            marginTop: 10,
-          }}
-        >
+        <div>
           <button
-            style={{
-              width: 100,
-              height: 40,
-            }}
+            className={styles.a}
             onClick={() => {
-              blockAccount();
+              HandleClick();
             }}
           >
             Xác nhận

@@ -247,7 +247,6 @@ function PlayerDetail() {
                 </div>
               )}
               </div>
-            </div>
             {manager !== null && manager.flagReportFootballPlayer >= 3 ? (
               manager.status === true ? (
                 <FlagUserComponet user={manager} getUserById={getUserById} />
@@ -275,25 +274,19 @@ function PlayerDetail() {
             ) : (
               <div>
                 <h1
-                  style={{
-                    color: "red",
-                    fontSize: 24,
-                    margin: "10px 0",
-                  }}
+                 className={styles.titleWarning}
                 >
                   Cảnh báo
                 </h1>
                 <p
-                  style={{
-                    lineHeight: 1.2,
-                    fontSize: 20,
-                  }}
+                 className={styles.contentWarning}
                 >
                   Khi cầu thủ bị đánh cờ hơn 3 lần ,
                   chặn tài khoản sẽ xuất hiện
                 </p>
               </div>
             )}
+            </div>
             <div className={styles.content__leftdown}>
               <h2>Đội tham gia</h2>
               <div

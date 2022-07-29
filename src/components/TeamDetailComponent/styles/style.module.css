@@ -310,3 +310,29 @@
 .wrapReport table th {
   font-family: "Mulish-Bold";
 }
+
+.titleWarning{
+  border-radius: 5px;
+  margin-top: 30px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  background-color: #d9105c;
+  text-transform: uppercase;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+}
+
+.titleWarning::before{
+  display: block;
+  content: "";
+  width: 100%;
+  left: 0;
+  top: -15px;
+  height: 1px;
+  background-color: #ccc;
+  position: absolute;
+}
+.contentWarning{
+  font-size: 18px;
+}
