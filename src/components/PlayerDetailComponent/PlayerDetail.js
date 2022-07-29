@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Link, useParams } from "react-router-dom";
 import { getAPI } from "../../api";
+import { toast } from "react-toastify";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import LoadingAction from "../LoadingComponent/LoadingAction";
 import LoadingCircle from "../LoadingComponent/LoadingCircle";
@@ -9,6 +10,8 @@ import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 import { getReportByFootballPlayerIdAPI } from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
+import { takeFlagForUserAPI } from "../../api/UserAPI";
+import FlagUserComponet from "../FlagUserComponent";
 function PlayerDetail() {
   const { idPlayer } = useParams();
   const [player, setPlayer] = useState([]);
@@ -90,7 +93,32 @@ function PlayerDetail() {
       day.getFullYear()
     );
   };
+  const takeFlagForHost = async () => {
+    console.log(manager)
+    try {
+      const data = {
+        ...manager,
+        id: manager.id,
+        flagReportFootballPlayer: manager.flagReportFootballPlayer + 1,
+      };
 
+      const response = await takeFlagForUserAPI(data);
+      if (response.status === 201) {
+        getUserById(manager.id);
+        toast.success("Gắn cờ cầu thủ thành công", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   // format DateTime
   const formatDateTime = (date) => {
     const day = new Date(date);
@@ -195,9 +223,77 @@ function PlayerDetail() {
             <div className={styles.content__left}>
               <img src={player.playerAvatar} alt={player.playerName} />
               <div className={styles.function}>
-                <a href="#">Xóa cầu thủ</a>
+              {manager.flagReportFootballPlayer > 0  ? (
+                <div className={styles.function}>
+                  
+                  <a
+                    onClick={() => {
+                      takeFlagForHost();
+                    }}
+                  >
+                    Đánh cờ cầu thủ
+                  </a>
+                </div>
+              ) : (
+                <div className={styles.function}>
+                  <a
+                    onClick={() => {
+                      takeFlagForHost();
+                    }}
+                  >
+                    Cầu thủ đã bị đánh cờ
+                  </a>
+
+                </div>
+              )}
               </div>
             </div>
+            {manager !== null && manager.flagReportFootballPlayer >= 3 ? (
+              manager.status === true ? (
+                <FlagUserComponet user={manager} getUserById={getUserById} />
+              ) : (
+                <div>
+                  <h1
+                    style={{
+                      color: "red",
+                      fontSize: 24,
+                      margin: "10px 0",
+                    }}
+                  >
+                    Cảnh báo
+                  </h1>
+                  <p
+                    style={{
+                      lineHeight: 1.2,
+                      fontSize: 20,
+                    }}
+                  >
+                    Tài khoản chủ sở hữu cầu thủ đã bị khóa
+                  </p>
+                </div>
+              )
+            ) : (
+              <div>
+                <h1
+                  style={{
+                    color: "red",
+                    fontSize: 24,
+                    margin: "10px 0",
+                  }}
+                >
+                  Cảnh báo
+                </h1>
+                <p
+                  style={{
+                    lineHeight: 1.2,
+                    fontSize: 20,
+                  }}
+                >
+                  Khi cầu thủ bị đánh cờ hơn 3 lần ,
+                  chặn tài khoản sẽ xuất hiện
+                </p>
+              </div>
+            )}
             <div className={styles.content__leftdown}>
               <h2>Đội tham gia</h2>
               <div

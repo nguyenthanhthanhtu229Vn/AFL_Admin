@@ -9,6 +9,9 @@ import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 import { getReportByTeamIdAPI } from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
+import { takeFlagForUserAPI } from "../../api/UserAPI";
+import FlagUserComponet from "../FlagUserComponent";
 function TeamDetail() {
   const { idTeam } = useParams();
   const [team, setTeam] = useState([]);
@@ -132,7 +135,31 @@ function TeamDetail() {
       day.getFullYear()
     );
   };
+  const takeFlagForHost = async () => {
+    try {
+      const data = {
+        ...manager,
+        id: manager.id,
+        flagReportTeam: manager.flagReportTeam + 1,
+      };
 
+      const response = await takeFlagForUserAPI(data);
+      if (response.status === 201) {
+        getUserById(manager.id);
+        toast.success("Gắn cờ giải đấu thành công", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <>
       <ScrollToTop />
@@ -171,9 +198,42 @@ function TeamDetail() {
             <div className={styles.content__left}>
               <img src={team.teamAvatar} alt={team.teamName} />
               <div className={styles.function}>
-                <a href="#">Xóa đội bóng</a>
+                <a
+                  onClick={() => {
+                    takeFlagForHost();
+                  }}
+                >
+                  Xóa đội bóng
+                </a>
               </div>
             </div>
+            {
+              manager !== null && manager.flagReportTeam >= 3 ? 
+              manager.status === true ? 
+              <FlagUserComponet user={manager} getUserById={getUserById} /> : <div>
+              <h1 style={{
+              color:"red",
+              fontSize: 24,
+              margin: "10px 0",
+          }}>Cảnh báo</h1>
+              <p style={{
+              lineHeight: 1.2,
+              fontSize: 20,
+              
+          }}>Tài khoản chủ sở hữu đội bóng đã bị khóa</p>
+            </div> : <div>
+                <h1 style={{
+                color:"red",
+                fontSize: 24,
+                margin: "10px 0",
+            }}>Cảnh báo</h1>
+                <p style={{
+                lineHeight: 1.2,
+                fontSize: 20,
+                
+            }}>Khi chủ đội bóng bị dánh cờ nhiều hơn 3 lần, chặn tài khoản sẽ xuất hiện</p>
+              </div>
+            }
             <div className={styles.content__leftdown}>
               <h2>Thành viên</h2>
               <div

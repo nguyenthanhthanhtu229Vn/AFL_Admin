@@ -8,6 +8,10 @@ import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 import { getReportByTournamentIdAPI } from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
+import { cancelTournamentAPI } from "../../api/TournamentAPI";
+import { takeFlagForUserAPI } from "../../api/UserAPI";
+import FlagUserComponet from "../FlagUserComponent";
+import { toast } from "react-toastify";
 function TourDetail() {
   const { idTour } = useParams();
   const [tournament, setTournament] = useState([]);
@@ -60,7 +64,7 @@ function TourDetail() {
   };
   const changeDate = (data) => {
     const date = data.split(" ")[0];
-    console.log(data);
+    
     return (
       date.split("/")[1] +
       "/" +
@@ -179,13 +183,51 @@ function TourDetail() {
     if (teams.length > 0) {
       for (let i = 0; i < teams.length; i++) {
         if (teams[i].id === item.teamId) {
-          console.log("first");
+          
           a = teams[i];
           break;
         }
       }
     }
     return a;
+  };
+
+  const cancleTournament = async () => {
+    try {
+      const response = await cancelTournamentAPI(tournament.id);
+      if (response.status === 200) {
+        getTournament();
+        await takeFlagForHost();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const takeFlagForHost = async () => {
+    console.log(host);
+    try {
+      const data = {
+        ...host,
+        id: host.id,
+        flagReportTournament: host.flagReportTournament + 1,
+      };
+      
+      const response = await takeFlagForUserAPI(data);
+      if(response.status === 201){
+        getUserById(host.id);
+        toast.success("Gắn cờ giải đấu thành công", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <>
@@ -225,11 +267,63 @@ function TourDetail() {
           <div>
             <div className={styles.content__left}>
               <img src={tournament.tournamentAvatar} alt="khoa" />
-              <div className={styles.function}>
-                <a href="#">Hủy giải đấu</a>
-                <a href="#">Xóa giải đấu</a>
-              </div>
+              {tournament.status === true ? (
+                <div className={styles.function}>
+                  <a
+                    onClick={() => {
+                      cancleTournament();
+                    }}
+                  >
+                    Hủy giải đấu
+                  </a>
+                  <a
+                    onClick={() => {
+                      cancleTournament();
+                    }}
+                  >
+                    Xóa giải đấu
+                  </a>
+                </div>
+              ) : (
+                <div className={styles.function}>
+                  <a
+                    onClick={() => {
+                      cancleTournament();
+                    }}
+                  >
+                    Giải đã bị hủy 
+                  </a>
+
+                </div>
+              )}
             </div>
+            {
+              host !== null && host.flagReportTournament >= 3 ? 
+              host.status === true ? 
+              <FlagUserComponet user={host} getUserById={getUserById} /> : <div>
+              <h1 style={{
+              color:"red",
+              fontSize: 24,
+              margin: "10px 0",
+          }}>Cảnh báo</h1>
+              <p style={{
+              lineHeight: 1.2,
+              fontSize: 20,
+              
+          }}>Tài khoản chủ sở hữu giải đấu đã bị khóa</p>
+            </div> : <div>
+                <h1 style={{
+                color:"red",
+                fontSize: 24,
+                margin: "10px 0",
+            }}>Cảnh báo</h1>
+                <p style={{
+                lineHeight: 1.2,
+                fontSize: 20,
+                
+            }}>Khi chủ giải đấu bị dánh cờ nhiều hơn 3 giải đấu khác nhau , chặn tài khoản sẽ xuất hiện</p>
+              </div>
+            }
             <div className={styles.content__leftdown}>
               <h2>Đội bóng tham gia</h2>
               <div
