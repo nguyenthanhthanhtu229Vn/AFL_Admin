@@ -155,7 +155,7 @@ function TourDetail() {
 
       if (response.status === 200) {
         setReport(response.data);
-        console.log(response.data);
+        
       }
     } catch (err) {
       console.error(err);
@@ -237,6 +237,7 @@ function TourDetail() {
         setLoading(true);
         getReportFromHostByHostId();
         setCurrentPage(1);
+        getReportByTourID()
         toast.success("Gắn cờ giải đấu thành công", {
           position: "top-right",
           autoClose: 3000,

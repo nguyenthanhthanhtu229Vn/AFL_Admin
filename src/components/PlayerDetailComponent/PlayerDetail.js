@@ -12,6 +12,7 @@ import { getReportByFootballPlayerIdAPI } from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
 import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
+import { changStatusReport } from "../../utils/ChangeStatusReport";
 function PlayerDetail() {
   const { idPlayer } = useParams();
   const [player, setPlayer] = useState([]);
@@ -93,8 +94,11 @@ function PlayerDetail() {
       day.getFullYear()
     );
   };
+  const changeStatusReportTeam = async () => {
+    await changStatusReport([...report.reports]);
+  };
   const takeFlagForHost = async () => {
-    console.log(manager)
+    await changeStatusReportTeam();
     try {
       const data = {
         ...manager,
@@ -105,6 +109,8 @@ function PlayerDetail() {
       const response = await takeFlagForUserAPI(data);
       if (response.status === 201) {
         getUserById(manager.id);
+        getReportByFootballID();
+        setCurrentPage(1);
         toast.success("Gắn cờ cầu thủ thành công", {
           position: "top-right",
           autoClose: 3000,

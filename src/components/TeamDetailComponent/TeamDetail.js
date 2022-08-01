@@ -12,6 +12,7 @@ import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
 import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
+import { changStatusReport } from "../../utils/ChangeStatusReport";
 function TeamDetail() {
   const { idTeam } = useParams();
   const [team, setTeam] = useState([]);
@@ -97,7 +98,7 @@ function TeamDetail() {
 
       if (response.status === 200) {
         setReport(response.data);
-        console.log(response.data);
+        
       }
     } catch (err) {
       console.error(err);
@@ -135,7 +136,11 @@ function TeamDetail() {
       day.getFullYear()
     );
   };
+  const changeStatusReportTeam = async () => {
+    await changStatusReport([...report.reports]);
+  };
   const takeFlagForHost = async () => {
+    await changeStatusReportTeam();
     try {
       const data = {
         ...manager,
@@ -146,6 +151,8 @@ function TeamDetail() {
       const response = await takeFlagForUserAPI(data);
       if (response.status === 201) {
         getUserById(manager.id);
+        getReportByTeamID();
+        setCurrentPage(1);
         toast.success("Gắn cờ giải đấu thành công", {
           position: "top-right",
           autoClose: 3000,
@@ -203,7 +210,7 @@ function TeamDetail() {
                     takeFlagForHost();
                   }}
                 >
-                  Xóa đội bóng
+                  Đánh cờ đội bóng
                 </a>
               </div>
               {manager !== null && manager.flagReportTeam >= 3 ? (
