@@ -52,6 +52,7 @@ function Notification() {
           // eslint-disable-next-line no-console
           // console.log("Token is", data);
           localStorage.setItem("token_subcribe", data);
+          console.log(data)
           try {
             const response = await axios.post(
               `https://afootballleague.ddns.net/api/v1/notifications/connection`,
