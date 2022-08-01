@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import styles from "./styles/style.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import FlagUserComponet from "../FlagUserComponent";
 function AccountDetail() {
   const { idAccount } = useParams();
   const [loading, setLoading] = useState(false);
@@ -139,12 +140,21 @@ function AccountDetail() {
           <div className={styles.content__left}>
             <img src={account.avatar} alt={account.username} />
             <div className={styles.function}>
-              <span
+              
+              {
+                account.status === true ? <FlagUserComponet user={account} getUserById={getAccount}  /> :
+                <p style={{
+                  color:"red",
+                  marginLeft: 10,
+                  fontSize: 24
+                }}>Tài khoản đã bị khóa</p>
+              }
+              {/* <span
                 className={styles.link}
                 onClick={() => HandleClick(account.status, account.id)}
               >
                 {account.status ? "Chặn tài khoản" : "Bỏ chặn tài khoản"}
-              </span>
+              </span> */}
               {/* <a href="#">Xóa tài khoản</a> */}
             </div>
             <div className={styles.content__leftdown}>
