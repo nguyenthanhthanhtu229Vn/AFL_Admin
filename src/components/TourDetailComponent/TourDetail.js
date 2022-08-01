@@ -15,6 +15,7 @@ import { cancelTournamentAPI } from "../../api/TournamentAPI";
 import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
 import { toast } from "react-toastify";
+import { changStatusReport } from "../../utils/ChangeStatusReport";
 function TourDetail() {
   const { idTour } = useParams();
   const [tournament, setTournament] = useState([]);
@@ -209,6 +210,8 @@ function TourDetail() {
   };
 
   const cancleTournament = async () => {
+    setLoading(false);
+    await changeStatusReportTournament();
     try {
       const response = await cancelTournamentAPI(tournament.id);
       if (response.status === 200) {
@@ -220,7 +223,7 @@ function TourDetail() {
     }
   };
   const takeFlagForHost = async () => {
-    console.log(host);
+    
     try {
       const data = {
         ...host,
@@ -231,6 +234,9 @@ function TourDetail() {
       const response = await takeFlagForUserAPI(data);
       if (response.status === 201) {
         getUserById(host.id);
+        setLoading(true);
+        getReportFromHostByHostId();
+        setCurrentPage(1);
         toast.success("Gắn cờ giải đấu thành công", {
           position: "top-right",
           autoClose: 3000,
@@ -244,6 +250,9 @@ function TourDetail() {
     } catch (err) {
       console.error(err);
     }
+  };
+  const changeStatusReportTournament = async () => {
+    await changStatusReport([...report.reports, ...reportFromHost.reports]);
   };
   return (
     <>
@@ -297,7 +306,7 @@ function TourDetail() {
                 <div className={styles.function}>
                   <a
                     style={{
-                      cursor: "default"
+                      cursor: "default",
                     }}
                   >
                     Giải đã bị hủy
@@ -539,8 +548,8 @@ function TourDetail() {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th scope="col">STT</th>
                   <th scope="col">Lí do</th>
+                  <th scope="col">Nội dung lí do</th>
                   <th scope="col">Ngày báo cáo</th>
                 </tr>
               </thead>
@@ -548,7 +557,7 @@ function TourDetail() {
                 {reportFromHost.reports.map((item, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index + 1}</td>
+                      <td>{item.reason}</td>
                       <td>{item.reason}</td>
                       <td>{changeDate(item.dateReport)}</td>
                     </tr>

@@ -10,6 +10,7 @@ export default function FlagUserComponet(props) {
   const { user, getUserById } = props;
   const [fault, setFault] = useState(null);
   const [loading, setLoading] = useState(false);
+  console.log(user);
   const defaultFault = [
     {
       id: 1,
@@ -94,9 +95,23 @@ export default function FlagUserComponet(props) {
     <div className={styles.wrapBlocker}>
       {loading ? <LoadingAction /> : null}
       <h1 className={styles.titleBlock}>Chặn tài khoản</h1>
-      {/* {
-                user.countBlock > 0 ? "Tài khoản này đã bị khóa" + user.countBlock + " lần" : "Tài khoản chưa bị khóa lần nào"
-            } */}
+      {user.countBlock > 0 ? (
+        <p
+          style={{
+            marginBottom: 20,
+          }}
+        >
+          {"Tài khoản này đã bị khóa" + user.countBlock + " lần"}
+        </p>
+      ) : (
+        <p
+          style={{
+            marginBottom: 20,
+          }}
+        >
+          Tài khoản này chưa bị khóa lần nào
+        </p>
+      )}
       <select
         onChange={onChangeHandler}
         value={blockIndex}
