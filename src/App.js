@@ -18,8 +18,10 @@ import ResetPassword from "./components/ResetPasswordComponent/ResetPassword";
 import ChangePassWord from "./components/ChangePasswordComponent/ChangePassword";
 import ManagePlayer from "./components/ManagePlayerComponent/ManagePlayer";
 import PlayerDetail from "./components/PlayerDetailComponent/PlayerDetail";
+import useAuthListener from "./hooks/user_auth";
 function App() {
-  const user = localStorage.getItem("userInfo");
+  // const user = localStorage.getItem("userInfo");
+  const { user } = useAuthListener()  
   return (
     <div>
       <BrowserRouter>

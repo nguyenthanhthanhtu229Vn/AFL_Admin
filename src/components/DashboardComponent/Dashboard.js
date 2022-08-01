@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
@@ -16,6 +16,7 @@ import {
   DataLabel,
   Category,
 } from "@syncfusion/ej2-react-charts";
+import { analytics } from "../../firebase/firebase";
 
 export let data = [
   { month: "Jan", sales: 35 },
@@ -32,7 +33,7 @@ export let data = [
   { month: "Dec", sales: 32 },
 ];
 function Dashboard() {
-  const [primaryxAxis, setfirst] = useState({ valueType: "Category" });
+  const [primaryxAxis, setfirst] = useState({ valueType: "Category" });  
   return (
     <>
       <ScrollToTop />

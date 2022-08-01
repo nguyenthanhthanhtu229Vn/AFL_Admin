@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getAPI } from "../../api";
+import Notification from "../NotificationComponent/Notification"
 import styles from "./styles/style.module.css";
 function HeaderLeft(id) {
   const location = useLocation();
@@ -192,7 +193,7 @@ function HeaderLeft(id) {
         </ul>
       </div>
       <div className={styles.headerRight}>
-        <i class="fa-regular fa-bell"></i>
+        <Notification/>
         <div className={styles.right}>
           <div
             className={styles.myAccount}

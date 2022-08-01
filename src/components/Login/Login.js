@@ -9,18 +9,18 @@ import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import { toast } from "react-toastify";
 import LoadingAction from "../LoadingComponent/LoadingAction";
 function Login() {
-  const firebaseConfig = {
-    apiKey: "AIzaSyCYXpUYy_KK1FjtBjz19gY2QTWi4sBcsgU",
-    authDomain: "amateurfoooballleague.firebaseapp.com",
-    databaseURL: "gs://amateurfoooballleague.appspot.com",
-    projectId: "amateurfoooballleague",
-    storageBucket: "amateurfoooballleague.appspot.com",
-    messagingSenderId: "765175452190",
-    appId: "1:765175452190:web:3e01517d116d4777c9140f",
-    measurementId: "G-7Z7LB0W52J",
-  };
+  // const firebaseConfig = {
+  //   apiKey: "AIzaSyCYXpUYy_KK1FjtBjz19gY2QTWi4sBcsgU",
+  //   authDomain: "amateurfoooballleague.firebaseapp.com",
+  //   databaseURL: "gs://amateurfoooballleague.appspot.com",
+  //   projectId: "amateurfoooballleague",
+  //   storageBucket: "amateurfoooballleague.appspot.com",
+  //   messagingSenderId: "765175452190",
+  //   appId: "1:765175452190:web:3e01517d116d4777c9140f",
+  //   measurementId: "G-7Z7LB0W52J",
+  // };
 
-  firebase.initializeApp(firebaseConfig);
+  // firebase.initializeApp(firebaseConfig);
 
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePass = () => {
