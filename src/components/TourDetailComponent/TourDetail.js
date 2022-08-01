@@ -6,7 +6,10 @@ import LoadingAction from "../LoadingComponent/LoadingAction";
 import LoadingCircle from "../LoadingComponent/LoadingCircle";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
-import { getReportByTournamentIdAPI } from "../../api/ReportAPI";
+import {
+  getReportByTournamentIdAPI,
+  getReportFromHostByTournamentIdAPI,
+} from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
 import { cancelTournamentAPI } from "../../api/TournamentAPI";
 import { takeFlagForUserAPI } from "../../api/UserAPI";
@@ -24,6 +27,7 @@ function TourDetail() {
   const [height, setHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [report, setReport] = useState(null);
+  const [reportFromHost, setReportFromHost] = useState(null);
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -121,6 +125,7 @@ function TourDetail() {
   useEffect(() => {
     getTournament();
     getTeam();
+    getReportFromHostByHostId();
   }, []);
 
   useEffect(() => {
@@ -129,6 +134,18 @@ function TourDetail() {
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
+  };
+
+  const getReportFromHostByHostId = async () => {
+    try {
+      const response = await getReportFromHostByTournamentIdAPI(idTour);
+
+      if (response.status === 200) {
+        setReportFromHost(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const getReportByTourID = async () => {
@@ -279,8 +296,8 @@ function TourDetail() {
               ) : (
                 <div className={styles.function}>
                   <a
-                    onClick={() => {
-                      cancleTournament();
+                    style={{
+                      cursor: "default"
                     }}
                   >
                     Giải đã bị hủy
@@ -518,11 +535,36 @@ function TourDetail() {
         </div>
         <div className={styles.wrapReport}>
           <h2>Thông tin hủy giải từ chủ giải đấu</h2>
+          {reportFromHost !== null && reportFromHost.reports.length > 0 ? (
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th scope="col">STT</th>
+                  <th scope="col">Lí do</th>
+                  <th scope="col">Ngày báo cáo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportFromHost.reports.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{item.reason}</td>
+                      <td>{changeDate(item.dateReport)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <h1>Giải đấu chưa nhận được báo cáo từ người tạo giải</h1>
+          )}
+          <div></div>
         </div>
+
         <div className={styles.wrapReport}>
           <h2>Thông tin báo cáo của giải đấu</h2>
-
-          {report !== null ? (
+          {report !== null && report.reports.length > 0 ? (
             <div>
               <table className={styles.table}>
                 <thead>
