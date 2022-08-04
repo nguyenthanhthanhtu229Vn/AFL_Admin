@@ -10,28 +10,26 @@ import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import LoadingAction from "../LoadingComponent/LoadingAction";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
+import { getReportGroupByAPI } from "../../api/ReportAPI";
 function ManageReport() {
   const MySwal = withReactContent(Swal);
   const [flagItem, setFlagItem] = useState({ item: [], user: [] });
   const [popUpFlag, setPopUpFlag] = useState(false);
   const [account, setAccount] = useState([]);
-  const [tournament, setTournament] = useState([])
+  const [tournament, setTournament] = useState([]);
   const [contentSearch, setContentSearch] = useState("");
   const [statusSearch, setStatusSearch] = useState("Chưa duyệt");
   const [currentPage, setCurrentPage] = useState(1);
   const [check, setCheck] = useState(false);
   const [popupReport, setPopupReport] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [listReport, setListReport] = useState([]);
-  const [reportType, setReportType] = useState("");
+  const [listReport, setListReport] = useState(null);
+  const [reportType, setReportType] = useState("FootballPlayer");
   const [count, setCount] = useState(0);
   const [countList, setCountList] = useState(0);
-  const getListReport = (reason, currentPage, statusSearch, reportType) => {
+  const getListReport = () => {
     setLoading(true);
-    let afterDefaultURL = null;
-    afterDefaultURL = `reports?reason=${reason}&report-type=${reportType}&status=${statusSearch}&order-by=DateReport&order-type=DESC&page-offset=${currentPage}&limit=3`;
-    // afterDefaultURL = `users?user-name=${nameFind}&order-by=${orderBy}&order-type=${orderType}&page-offset=${currentPage}&limit=5`;
-    let response = getAPI(afterDefaultURL);
+    const response = getReportGroupByAPI(reportType, statusSearch, currentPage);
     response
       .then((res) => {
         setListReport(res.data.reports);
@@ -46,44 +44,15 @@ function ManageReport() {
   };
 
   useEffect(() => {
-    getListReport(contentSearch, currentPage, statusSearch, reportType);
-    getAccount();
-    getTournament();
-  }, [check, currentPage, reportType]);
+    getListReport();
+    // getAccount();
+    // getTournament();
+  }, [reportType, statusSearch, currentPage]);
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
-    getListReport(contentSearch, data.selected + 1, statusSearch, reportType);
-    setCheck(!check);
-  };
-
-  const HandleClick = (item) => {
-    console.log("asdasda");
-    Swal.fire({
-      title: "Bạn chắc chứ?",
-      text: "Chặn tài khoản này",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#5fe37d",
-      cancelButtonColor: "#b80e4e",
-      confirmButtonText: "Xác nhận",
-      cancelButtonText: "Hủy",
-      customClass: {
-        icon: styles.no_before_icon,
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        changeStatusUser(
-          item.tournamentId !== 0
-            ? item.tournament.id
-            : item.teamId !== 0
-            ? item.team.id
-            : item.footballPlayer.id,
-          item
-        );
-      }
-    });
+    // getListReport(contentSearch, data.selected + 1, statusSearch, reportType);
+    // setCheck(!check);
   };
 
   const changeStatusReport = async (item, status) => {
@@ -192,30 +161,30 @@ function ManageReport() {
     );
   };
 
-  const filterStatusReport = (status) => {
-    setCurrentPage(1);
-    setStatusSearch(status);
-    getListReport(contentSearch, currentPage, status, reportType);
-    setCheck(!check);
-  };
+  // const filterStatusReport = (status) => {
+  //   setCurrentPage(1);
+  //   setStatusSearch(status);
+  //   getListReport();
+  //   setCheck(!check);
+  // };
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    setCurrentPage(1);
-    getListReport(contentSearch, currentPage, statusSearch, reportType);
-    setCheck(!check);
-  };
+  // const onSubmitHandler = (e) => {
+  //   e.preventDefault();
+  //   setCurrentPage(1);
+  //   getListReport();
+  //   setCheck(!check);
+  // };
 
-  const onChangeHandler = (e) => {
-    const { name, value } = e.target;
-    switch (name) {
-      case "contentSearch":
-        setContentSearch(value);
-        break;
-      default:
-        break;
-    }
-  };
+  // const onChangeHandler = (e) => {
+  //   const { name, value } = e.target;
+  //   switch (name) {
+  //     case "contentSearch":
+  //       setContentSearch(value);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const getAccount = () => {
     setLoading(true);
@@ -247,7 +216,7 @@ function ManageReport() {
   };
 
   const checkTournament = (id) => {
-    let item ="";
+    let item = "";
     if (tournament.length > 0) {
       for (let i = 0; i < tournament.length; i++) {
         if (tournament[i].id === id) {
@@ -264,7 +233,7 @@ function ManageReport() {
       for (let i = 0; i < account.length; i++) {
         if (account[i].id === id) {
           item = account[i];
-          console.log(item)
+          console.log(item);
           break;
         }
       }
@@ -484,7 +453,10 @@ function ManageReport() {
                   ? `${styles.ac} ${styles.active}`
                   : styles.ac
               }
-              onClick={() => filterStatusReport("Chưa duyệt")}
+              onClick={() => {
+                setStatusSearch("Chưa duyệt");
+                setCurrentPage(1);
+              }}
             >
               <i class="fa-solid fa-circle-dot"></i>Chưa duyệt
             </div>
@@ -494,7 +466,10 @@ function ManageReport() {
                   ? `${styles.ac} ${styles.active}`
                   : styles.ac
               }
-              onClick={() => filterStatusReport("Đã duyệt")}
+              onClick={() => {
+                setStatusSearch("Đã duyệt");
+                setCurrentPage(1);
+              }}
             >
               <i class="fa-solid fa-circle-check"></i>Đã duyệt
             </div>
@@ -504,13 +479,16 @@ function ManageReport() {
                   ? `${styles.ac} ${styles.active}`
                   : styles.ac
               }
-              onClick={() => filterStatusReport("")}
+              onClick={() => {
+                setStatusSearch("");
+                setCurrentPage(1);
+              }}
             >
               <i class="fa-solid fa-circle-exclamation"></i>Tất cả báo cáo
             </div>
             <p>
               Phân loại{" "}
-              {reportType !== "" ? (
+              {/* {reportType !== "" ? (
                 <span
                   className={styles.clearFilter}
                   onClick={() => {
@@ -519,7 +497,7 @@ function ManageReport() {
                 >
                   X
                 </span>
-              ) : null}
+              ) : null} */}
             </p>
             <div
               className={
@@ -527,7 +505,11 @@ function ManageReport() {
                   ? `${styles.av} ${styles.active2}`
                   : styles.av
               }
-              onClick={() => setReportType("FootballPlayer")}
+              onClick={() => {
+                setReportType("FootballPlayer");
+                setListReport(null);
+                setCurrentPage(1);
+              }}
             >
               <span className={styles.green}></span>Báo cáo cầu thủ
             </div>
@@ -537,7 +519,11 @@ function ManageReport() {
                   ? `${styles.av} ${styles.active2}`
                   : styles.av
               }
-              onClick={() => setReportType("Tournament")}
+              onClick={() => {
+                setReportType("Tournament");
+                setListReport(null);
+                setCurrentPage(1);
+              }}
             >
               <span className={styles.red}></span>Báo cáo giải đấu
             </div>
@@ -547,13 +533,17 @@ function ManageReport() {
                   ? `${styles.av} ${styles.active2}`
                   : styles.av
               }
-              onClick={() => setReportType("Team")}
+              onClick={() => {
+                setReportType("Team");
+                setListReport(null);
+                setCurrentPage(1);
+              }}
             >
               <span className={styles.yellow}></span>Báo cáo đội bóng
             </div>
           </div>
           <div className={styles.content__right}>
-            <form className={styles.search__bot} onSubmit={onSubmitHandler}>
+            {/* <form className={styles.search__bot} onSubmit={onSubmitHandler}>
               <input
                 type="text"
                 placeholder="Tìm kiếm"
@@ -563,7 +553,7 @@ function ManageReport() {
                 name="contentSearch"
               />
               <i class="fa-solid fa-magnifying-glass"></i>
-            </form>
+            </form> */}
             <div className={styles.main__content}>
               <div className={styles.option}>
                 <div className={styles.selectAll}></div>
@@ -575,123 +565,57 @@ function ManageReport() {
                 ></i>
               </div>
               <div className={styles.list}>
-                {listReport.length !== 0 ? (
-                  listReport.map((item) => (
-                    <div className={styles.item} key={item.id}>
-                      <div className={styles.left}>
-                        <img src={item.user.avatar} alt={item.user.username} />
+                {listReport !== null ? (
+                  listReport.map((item, index) => (
+                    <div className={styles.item} key={index}>
+                      <div
+                        style={{
+                          padding: "20px 0px",
+                          alignItems: "center",
+                        }}
+                        className={styles.left}
+                      >
+                        <img
+                          src={
+                            reportType === "FootballPlayer"
+                              ? item.footballPlayerReportVM.playerAvatar
+                              : reportType === "Team"
+                              ? item.teamReportVM.teamAvatar
+                              : item.tournamentReportVM.tournamentAvatar
+                          }
+                          alt={
+                            reportType === "FootballPlayer"
+                              ? item.footballPlayerReportVM.playerName
+                              : reportType === "Team"
+                              ? item.teamReportVM.teamName
+                              : item.tournamentReportVM.tournamentName
+                          }
+                        />
                       </div>
-                      <div className={styles.mid}>
+                      <div
+                        style={{
+                          width: 710,
+                        }}
+                        className={styles.mid}
+                      >
                         <Link to={`/accountDetail/${item.userId}`}>
-                          <h3>{item.user.username}</h3>
+                          <h3>
+                            {reportType === "FootballPlayer"
+                              ? item.footballPlayerReportVM.playerName
+                              : reportType === "Team"
+                              ? item.teamReportVM.teamName
+                              : item.tournamentReportVM.tournamentName}
+                          </h3>
                         </Link>
                         <p className={styles.titleMid}>
-                          Đã báo cáo
-                          <Link
-                            to={
-                              item.tournamentId !== 0
-                                ? `/tourDetail/${item.tournament.id}`
-                                : item.teamId !== 0
-                                ? `/teamDetail/${item.team.id}`
-                                : `/playerDetail/${item.footballPlayer.id}`
-                            }
-                          >
-                            {item.tournamentId !== 0
-                              ? " giải đấu: " + item.tournament.tournamentName
-                              : item.teamId !== 0
-                              ? " đội bóng: " + item.team.teamName
-                              : " cầu thủ: " + item.footballPlayer.playerName}
-                            <img
-                              src={
-                                item.tournamentId !== 0
-                                  ? item.tournament.tournamentAvatar
-                                  : item.teamId !== 0
-                                  ? item.team.teamAvatar
-                                  : item.footballPlayer.playerAvatar
-                              }
-                              alt={item.user.username}
-                              className={styles.imageMid}
-                            />
-                          </Link>
-                          <span> của</span>
-                          <Link
-                            to={
-                              item.tournamentId !== 0
-                                ? `/accountDetail/${item.tournament.id}`
-                                : item.teamId !== 0
-                                ? `/accountDetail/${item.team.id}`
-                                : `/accountDetail/${item.footballPlayer.id}`
-                            }
-                          >
-                            {item.tournamentId !== 0
-                              ? checkAccount(checkTournament(item.tournamentId)).username
-                              : item.teamId !== 0
-                              ? checkAccount(item.teamId).username
-                              : checkAccount(item.footballPlayerId).username}
-                            <img
-                              src={
-                                item.tournamentId !== 0
-                                  ? checkAccount(checkTournament(item.tournamentId)).avatar
-                                  : item.teamId !== 0
-                                  ? checkAccount(item.teamId).avatar
-                                  : checkAccount(item.footballPlayerId).avatar
-                              }
-                              alt={item.user.username}
-                              className={styles.imageMid}
-                            />
-                          </Link>
+                          Đã bị báo cáo{" "}
+                          {reportType === "FootballPlayer"
+                            ? item.footballPlayerReportVM.countReport
+                            : reportType === "Team"
+                            ? item.teamReportVM.countReport
+                            : item.tournamentReportVM.countReport}{" "}
+                          lần
                         </p>
-                        <h4>Nội dung:</h4>
-                        <p className={styles.reason}>- {item.reason}</p>
-                      </div>
-                      <div className={styles.right}>
-                        <span
-                          className={
-                            item.tournamentId !== 0
-                              ? styles.red
-                              : item.teamId !== 0
-                              ? styles.yellow
-                              : styles.green
-                          }
-                        ></span>
-                        {formatDateTime(item.dateReport)}
-                        {item.status === "Chưa duyệt" ? (
-                          <div className={styles.leftOption}>
-                            <div
-                              className={styles.myDIV}
-                              onClick={() => {
-                                setFlagItem({
-                                  item: item,
-                                  user:
-                                    item.tournamentId !== 0
-                                      ? checkAccount(checkTournament(item.tournamentId))
-                                      : item.teamId !== 0
-                                      ? checkAccount(item.teamId)
-                                      : checkAccount(item.footballPlayerId),
-                                });
-                                setPopUpFlag(true);
-                              }}
-                            >
-                              <i class="fa-solid fa-flag"></i>
-                            </div>
-                            <div className={styles.hide}>Gắn cờ người</div>
-                            {(item.tournamentId !== 0
-                              ? checkAccount(checkTournament(item.tournamentId))
-                                  .flagReportTournament
-                              : item.teamId !== 0
-                              ? checkAccount(item.teamId).flagReportTeam
-                              : checkAccount(item.footballPlayerId)
-                                  .flagReportFootballPlayer) >= 10 ? (
-                              <div
-                                className={styles.myDIV}
-                                onClick={() => HandleClick(item)}
-                              >
-                                <i class="fa-solid fa-circle-minus"></i>
-                              </div>
-                            ) : null}
-                            <div className={styles.hide}>Chặn người này</div>
-                          </div>
-                        ) : null}
                       </div>
                     </div>
                   ))
@@ -709,7 +633,7 @@ function ManageReport() {
               nextClassName={styles.pageItem}
               previousClassName={styles.pageItem}
               breakLabel={"..."}
-              pageCount={Math.ceil(count / 3)}
+              pageCount={Math.ceil(count / 5)}
               marginPagesDisplayed={3}
               onPageChange={handlePageClick}
               pageLinkClassName={styles.pagelink}
