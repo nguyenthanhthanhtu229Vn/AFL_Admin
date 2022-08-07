@@ -52,7 +52,7 @@ function Notification() {
           // eslint-disable-next-line no-console
           // console.log("Token is", data);
           localStorage.setItem("token_subcribe", data);
-          console.log(data)
+          console.log(data);
           try {
             const response = await axios.post(
               `https://afootballleague.ddns.net/api/v1/notifications/connection`,
@@ -104,9 +104,7 @@ function Notification() {
 
   const CustomToastWithLink = (item) => (
     <div>
-      <div
-        className={styles.noti__link1}
-      >
+      <div className={styles.noti__link1}>
         <div className={styles.content__text1}>
           <p className={styles.time1}>{item.notification.title}</p>
           <p>{item.notification.body}</p>
@@ -166,11 +164,11 @@ function Notification() {
       if (response.status === 200) {
         setLimit(limit);
         if (notification.teamId !== 0) {
-          navigate(`/teamDetail/${notification.teamId}/inforTeamDetail`);
+          navigate(`/teamDetail/${notification.teamId}`);
+        } else if (notification.footballPlayerId !== 0) {
+          navigate(`/playerDetail/${notification.footballPlayerId}`);
         } else {
-          navigate(
-            `/tournamentDetail/${notification.tournamentId}/inforTournamentDetail`
-          );
+          navigate(`/tournamentDetail/${notification.tournamentId}`);
         }
       }
     } catch (error) {
@@ -219,7 +217,7 @@ function Notification() {
               : `${styles.noti__img} ${styles.ring__bell}`
           }
         >
-           <i class="fa-regular fa-bell"></i>
+          <i class="fa-regular fa-bell"></i>
         </div>
       </div>
       <div

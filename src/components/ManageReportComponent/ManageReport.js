@@ -472,12 +472,12 @@ function ManageReport() {
         </div>
         <div className={styles.content__wrap}>
           <div className={styles.content__left}>
-            <span
+            {/* <span
               className={styles.a}
               onClick={() => setPopupReport(!popupReport)}
             >
               Soạn cảnh báo
-            </span>
+            </span> */}
             <div
               className={
                 statusSearch === "Chưa duyệt"
