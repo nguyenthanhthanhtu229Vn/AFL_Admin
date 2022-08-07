@@ -23,5 +23,11 @@ export function getReportByFootballPlayerIdAPI(id, currentPage) {
 
 export function putStatusReportAPI(data) {
   const afterDefaultURL = `reports`;
-  return axios.put(url + afterDefaultURL,data);
+  return axios.put(url + afterDefaultURL, data);
+}
+
+export function getReportGroupByAPI(type, status, currentPage) {
+  const afterDefaultURL = `reports/group-by?report-type=${type}&status=${status}&page-offset=${currentPage}&limit=5`;
+  console.log(afterDefaultURL)
+  return axios.get(url + afterDefaultURL);
 }
