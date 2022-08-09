@@ -21,7 +21,7 @@ function ManageAccount() {
   const [contentSearch, setContentSearch] = useState("");
   const [countList, setCountList] = useState(0);
   const [sort, setSort] = useState("");
-  const [orderBy, setOrderBy] = useState("DateCreate");
+  const [orderBy, setOrderBy] = useState("Id");
   const [orderType, setOrderType] = useState("DESC");
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
@@ -145,10 +145,10 @@ function ManageAccount() {
           orderby = "UserName";
           ordertype = "DESC";
         } else if (value === "timeDesc") {
-          orderby = "DateCreate";
+          orderby = "Id";
           ordertype = "ASC";
         } else if (value === "timeIns") {
-          orderby = "DateCreate";
+          orderby = "Id";
           ordertype = "DESC";
         }
         setOrderBy(orderby);
