@@ -18,7 +18,7 @@ function ManageTournament() {
   const [tournament, setTournament] = useState([]);
   const [countList, setCountList] = useState(0);
   const [sort, setSort] = useState("");
-  const [orderBy, setOrderBy] = useState("DateCreate");
+  const [orderBy, setOrderBy] = useState("Id");
   const [orderType, setOrderType] = useState("DESC");
 
   const handlePageClick = (data) => {
@@ -90,10 +90,10 @@ function ManageTournament() {
           orderby = "TournamentName";
           ordertype = "DESC";
         } else if (value === "timeDesc") {
-          orderby = "DateCreate";
+          orderby = "Id";
           ordertype = "ASC";
         } else if (value === "timeIns") {
-          orderby = "DateCreate";
+          orderby = "Id";
           ordertype = "DESC";
         }
         setOrderBy(orderby);
