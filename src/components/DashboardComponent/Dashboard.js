@@ -2,22 +2,9 @@ import React, { useEffect, useState } from "react";
 import HeaderLeft from "../HeaderLeftComponent/HeaderLeft";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
-import {
-  ChartComponent,
-  SeriesCollectionDirective,
-  SeriesDirective,
-  Inject,
-  LineSeries,
-  DateTime,
-  Legend,
-  Tooltip,
-  ILoadedEventArgs,
-  ChartTheme,
-  DataLabel,
-  Category,
-} from "@syncfusion/ej2-react-charts";
-import { analytics } from "../../firebase/firebase";
-
+import { useLocation } from "react-router-dom";
+import { useAnalyticsApi, useAuthorize } from "react-use-analytics-api";
+import ReactGA from "react-ga";
 export let data = [
   { month: "Jan", sales: 35 },
   { month: "Feb", sales: 28 },
@@ -33,13 +20,36 @@ export let data = [
   { month: "Dec", sales: 32 },
 ];
 function Dashboard() {
-  const [primaryxAxis, setfirst] = useState({ valueType: "Category" });  
+  const useGaTracker = () => {
+    const location = useLocation();
+    const [initialized, setInitialized] = useState(false);
+
+    useEffect(() => {
+      if (!window.location.href.includes("localhost")) {
+        ReactGA.initialize("UA-314149563-x");
+      }
+      setInitialized(true);
+    }, []);
+
+    useEffect(() => {
+      if (initialized) {
+        ReactGA.pageview(location.pathname + location.search);
+      }
+    }, [initialized, location]);
+  };
+
+  useGaTracker();
+  const [primaryxAxis, setfirst] = useState({ valueType: "Category" });
+
   return (
     <>
       <ScrollToTop />
       <HeaderLeft />
       <div className={styles.manage}>
-        <div className={styles.list}>
+        <div className={styles.title}>
+          <h2 className={styles.title__left}>Quản lý tài khoản</h2>
+        </div>
+        {/* <div className={styles.list}>
           <div className={styles.item}>
             <div className={styles.item__top}>
               <div className={styles.img}>
@@ -82,26 +92,70 @@ function Dashboard() {
               <img src="/assets/img/homepage/Path4.png" alt="chart" />
             </div>
           </div>
-        </div>
+        </div> */}
 
+        <div className={styles.chart1}>
+          <iframe
+            width="538"
+            height="329"
+            seamless
+            frameborder="0"
+            scrolling="no"
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5RAIfDRSfvmCHN6MAAMrg6NVwAygdSKZGZHGNl-khkJ8uzkWORP5jYXE9E-FsIHCgagFFcinQKpOe/pubchart?oid=723021633&amp;format=interactive"
+          ></iframe>
+          <iframe
+            width="531"
+            height="329"
+            seamless
+            frameborder="0"
+            scrolling="no"
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5RAIfDRSfvmCHN6MAAMrg6NVwAygdSKZGZHGNl-khkJ8uzkWORP5jYXE9E-FsIHCgagFFcinQKpOe/pubchart?oid=1771922923&amp;format=interactive"
+          ></iframe>
+        </div>
         <div className={styles.chart}>
-          <ChartComponent id="charts" primaryXAxis={primaryxAxis}>
-            <Inject
-              services={[LineSeries, Legend, Tooltip, DataLabel, Category]}
-            />
-            <SeriesCollectionDirective>
-              <SeriesDirective
-                dataSource={data}
-                xName="month"
-                yName="sales"
-                name="Giải đấu mỗi tháng"
-              />
-            </SeriesCollectionDirective>
-          </ChartComponent>
+          <iframe
+            width="1180"
+            height="371"
+            seamless
+            frameborder="0"
+            scrolling="no"
+            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5RAIfDRSfvmCHN6MAAMrg6NVwAygdSKZGZHGNl-khkJ8uzkWORP5jYXE9E-FsIHCgagFFcinQKpOe/pubchart?oid=26099282&amp;format=interactive"
+          ></iframe>
         </div>
       </div>
     </>
   );
+  // const { ready, gapi, authorized, error } = useAnalyticsApi();
+  // if (error) {
+  //   console.error(error);
+  // }
+  // const authorize = useAuthorize(gapi, {
+  //   clientId:
+  //     "67772401711-q8r4726ido6n07e20hacno6fo7b7llar.apps.googleusercontent.com",
+  //   container: "authorize-container-id",
+  // });
+  // return (
+  //   <div>
+  //     {!error &&
+  //       (ready && !!gapi ? (
+  //         <>
+  //           <div>✔️ Loaded and ready to use!</div>
+  //           {authorized && <div>☀️ Logged into Google Analytics!</div>}
+  //           {!authorized && <div>🔐 Not logged into Google Analytics</div>}
+  //         </>
+  //       ) : (
+  //         <div>⌛ Loading...</div>
+  //       ))}
+  //     {error && (
+  //       <div>
+  //         <div style={{ fontSize: "120%" }}>❌ Error</div>
+  //         <hr style={{ border: 0, borderTop: "solid 1px rosybrown" }} />
+  //         <p>{error.toString()}</p>
+  //         <p>See the console for more information.</p>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
 }
 
 export default Dashboard;

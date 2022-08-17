@@ -145,7 +145,7 @@ function HeaderLeft(id) {
               </>
             ) : null}
           </li>
-          <li>
+          {/* <li>
             <p
               className={`${styles.title}`}
               onClick={() => {
@@ -167,7 +167,7 @@ function HeaderLeft(id) {
                 <a href="#">Số thẻ</a>
               </>
             ) : null}
-          </li>
+          </li> */}
           {/* <li>
             <p
               className={`${styles.title}`}

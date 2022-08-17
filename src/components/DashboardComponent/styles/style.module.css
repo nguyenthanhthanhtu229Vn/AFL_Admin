@@ -66,3 +66,20 @@
 .chart{
     margin-top: 50px;
 }
+
+.chart1{
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title__left {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
