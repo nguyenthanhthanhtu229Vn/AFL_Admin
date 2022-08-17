@@ -47,7 +47,7 @@ function Dashboard() {
       <HeaderLeft />
       <div className={styles.manage}>
         <div className={styles.title}>
-          <h2 className={styles.title__left}>Quản lý tài khoản</h2>
+          <h2 className={styles.title__left}>Thống kê</h2>
         </div>
         {/* <div className={styles.list}>
           <div className={styles.item}>
