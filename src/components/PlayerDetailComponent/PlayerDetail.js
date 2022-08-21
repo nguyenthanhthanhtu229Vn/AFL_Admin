@@ -229,9 +229,7 @@ function PlayerDetail() {
             <div className={styles.content__left}>
               <img src={player.playerAvatar} alt={player.playerName} />
               <div className={styles.function}>
-              {manager.flagReportFootballPlayer > 0  ? (
                 <div className={styles.function}>
-                  
                   <a
                     onClick={() => {
                       takeFlagForHost();
@@ -240,58 +238,40 @@ function PlayerDetail() {
                     Đánh cờ cầu thủ
                   </a>
                 </div>
-              ) : (
-                <div className={styles.function}>
-                  <a
-                    onClick={() => {
-                      takeFlagForHost();
-                    }}
-                  >
-                    Cầu thủ đã bị đánh cờ
-                  </a>
-
-                </div>
-              )}
               </div>
-            {manager !== null && manager.flagReportFootballPlayer >= 3 ? (
-              manager.status === true ? (
-                <FlagUserComponet user={manager} getUserById={getUserById} />
+              {manager !== null && manager.flagReportFootballPlayer >= 3 ? (
+                manager.status === true ? (
+                  <FlagUserComponet user={manager} getUserById={getUserById} />
+                ) : (
+                  <div>
+                    <h1
+                      style={{
+                        color: "red",
+                        fontSize: 24,
+                        margin: "10px 0",
+                      }}
+                    >
+                      Cảnh báo
+                    </h1>
+                    <p
+                      style={{
+                        lineHeight: 1.2,
+                        fontSize: 20,
+                      }}
+                    >
+                      Tài khoản chủ sở hữu cầu thủ đã bị khóa
+                    </p>
+                  </div>
+                )
               ) : (
                 <div>
-                  <h1
-                    style={{
-                      color: "red",
-                      fontSize: 24,
-                      margin: "10px 0",
-                    }}
-                  >
-                    Cảnh báo
-                  </h1>
-                  <p
-                    style={{
-                      lineHeight: 1.2,
-                      fontSize: 20,
-                    }}
-                  >
-                    Tài khoản chủ sở hữu cầu thủ đã bị khóa
+                  <h1 className={styles.titleWarning}>Cảnh báo</h1>
+                  <p className={styles.contentWarning}>
+                    Khi cầu thủ bị đánh cờ hơn 3 lần , chặn tài khoản sẽ xuất
+                    hiện
                   </p>
                 </div>
-              )
-            ) : (
-              <div>
-                <h1
-                 className={styles.titleWarning}
-                >
-                  Cảnh báo
-                </h1>
-                <p
-                 className={styles.contentWarning}
-                >
-                  Khi cầu thủ bị đánh cờ hơn 3 lần ,
-                  chặn tài khoản sẽ xuất hiện
-                </p>
-              </div>
-            )}
+              )}
             </div>
             <div className={styles.content__leftdown}>
               <h2>Đội tham gia</h2>
