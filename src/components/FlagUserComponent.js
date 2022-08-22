@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { setDefaults } from "react-i18next";
 import styles from "./TourDetailComponent/styles/style.module.css";
-import { blockUserAPI } from "../api/UserAPI";
+import { blockUserAPI, sendmailAPI } from "../api/UserAPI";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { toast } from "react-toastify";
 import LoadingAction from "./LoadingComponent/LoadingAction";
+import { async } from "@firebase/util";
 export default function FlagUserComponet(props) {
   const { user, getUserById } = props;
   const [fault, setFault] = useState(null);
@@ -74,6 +75,19 @@ export default function FlagUserComponet(props) {
       const response = await blockUserAPI(user.id, +blockIndex);
       console.log(response);
       if (response.status === 200) {
+        await sendMailBlock(user.id);
+      }
+    } catch (err) {
+      setLoading(false);
+      console.error(err);
+    }
+  };
+
+  const sendMailBlock = async (id) => {
+    setLoading(true);
+    try {
+      const response = await sendmailAPI(id);
+      if (response.status === 200) {
         setLoading(false);
         getUserById(user.id);
         toast.success("Chặn tài khoản thành công", {
@@ -86,11 +100,11 @@ export default function FlagUserComponet(props) {
           progress: undefined,
         });
       }
-    } catch (err) {
-      setLoading(false);
-      console.error(err);
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
     }
-  };
+  }
   return (
     <div className={styles.wrapBlocker}>
       {loading ? <LoadingAction /> : null}
@@ -120,12 +134,12 @@ export default function FlagUserComponet(props) {
         <option value="-1">Chọn hình phạt</option>
         {fault !== null
           ? fault.map((item, index) => {
-              return (
-                <option key={index} value={item.id}>
-                  {item.name}
-                </option>
-              );
-            })
+            return (
+              <option key={index} value={item.id}>
+                {item.name}
+              </option>
+            );
+          })
           : null}
       </select>
       {blockIndex !== null && blockIndex != -1 ? (

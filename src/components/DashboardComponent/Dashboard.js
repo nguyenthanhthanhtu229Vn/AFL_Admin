@@ -95,67 +95,18 @@ function Dashboard() {
         </div> */}
 
         <div className={styles.chart1}>
-          <iframe
-            width="538"
-            height="329"
-            seamless
-            frameborder="0"
-            scrolling="no"
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5RAIfDRSfvmCHN6MAAMrg6NVwAygdSKZGZHGNl-khkJ8uzkWORP5jYXE9E-FsIHCgagFFcinQKpOe/pubchart?oid=723021633&amp;format=interactive"
-          ></iframe>
-          <iframe
-            width="531"
-            height="329"
-            seamless
-            frameborder="0"
-            scrolling="no"
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5RAIfDRSfvmCHN6MAAMrg6NVwAygdSKZGZHGNl-khkJ8uzkWORP5jYXE9E-FsIHCgagFFcinQKpOe/pubchart?oid=1771922923&amp;format=interactive"
-          ></iframe>
+          <iframe src="https://app.chartbrew.com/chart/2eaf86b8-5658-4a01-85ab-47a5161ac173/embedded" allowTransparency="true" width="420" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
+          <iframe src="https://app.chartbrew.com/chart/6c0d0b7a-fcf9-42b0-8f4a-73433e38a90d/embedded" allowTransparency="true" width="700" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
+          {/* <iframe src="https://app.chartbrew.com/chart/034b2fcf-238d-4cc8-8144-124cabe0b82e/embedded" allowTransparency="true" width="700" height="300" scrolling="no" frameborder="0" style="background-color: #ffffff"></iframe> */}
         </div>
         <div className={styles.chart}>
-          <iframe
-            width="1180"
-            height="371"
-            seamless
-            frameborder="0"
-            scrolling="no"
-            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT5RAIfDRSfvmCHN6MAAMrg6NVwAygdSKZGZHGNl-khkJ8uzkWORP5jYXE9E-FsIHCgagFFcinQKpOe/pubchart?oid=26099282&amp;format=interactive"
-          ></iframe>
+        <iframe src="https://app.chartbrew.com/chart/84e5c586-6735-4774-b86c-b0791a6db85a/embedded" allowTransparency="true" width="100%" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
+          <iframe src="https://app.chartbrew.com/chart/2cc045f0-7c20-49a1-a94b-f8868d2af116/embedded" allowTransparency="true" width="100%" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
         </div>
+
       </div>
     </>
   );
-  // const { ready, gapi, authorized, error } = useAnalyticsApi();
-  // if (error) {
-  //   console.error(error);
-  // }
-  // const authorize = useAuthorize(gapi, {
-  //   clientId:
-  //     "67772401711-q8r4726ido6n07e20hacno6fo7b7llar.apps.googleusercontent.com",
-  //   container: "authorize-container-id",
-  // });
-  // return (
-  //   <div>
-  //     {!error &&
-  //       (ready && !!gapi ? (
-  //         <>
-  //           <div>✔️ Loaded and ready to use!</div>
-  //           {authorized && <div>☀️ Logged into Google Analytics!</div>}
-  //           {!authorized && <div>🔐 Not logged into Google Analytics</div>}
-  //         </>
-  //       ) : (
-  //         <div>⌛ Loading...</div>
-  //       ))}
-  //     {error && (
-  //       <div>
-  //         <div style={{ fontSize: "120%" }}>❌ Error</div>
-  //         <hr style={{ border: 0, borderTop: "solid 1px rosybrown" }} />
-  //         <p>{error.toString()}</p>
-  //         <p>See the console for more information.</p>
-  //       </div>
-  //     )}
-  //   </div>
-  // );
 }
 
 export default Dashboard;

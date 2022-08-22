@@ -65,6 +65,8 @@
 
 .chart{
     margin-top: 50px;
+    display: grid;
+    row-gap: 20px;
 }
 
 .chart1{
@@ -82,4 +84,8 @@
 .title__left {
   font-size: 32px;
   margin-bottom: 30px;
+}
+
+.itemchart{
+  background-color: #fff;
 }
