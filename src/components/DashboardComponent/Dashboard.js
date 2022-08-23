@@ -94,15 +94,16 @@ function Dashboard() {
           </div>
         </div> */}
 
-        <div className={styles.chart1}>
+        <iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/a9dc5cdb-3bee-4a16-9379-758954d027fa/page/tWDGB" frameborder="0" allowfullscreen></iframe>
+        {/* <div className={styles.chart1}>
           <iframe src="https://app.chartbrew.com/chart/2eaf86b8-5658-4a01-85ab-47a5161ac173/embedded" allowTransparency="true" width="420" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
-          <iframe src="https://app.chartbrew.com/chart/6c0d0b7a-fcf9-42b0-8f4a-73433e38a90d/embedded" allowTransparency="true" width="700" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
-          {/* <iframe src="https://app.chartbrew.com/chart/034b2fcf-238d-4cc8-8144-124cabe0b82e/embedded" allowTransparency="true" width="700" height="300" scrolling="no" frameborder="0" style="background-color: #ffffff"></iframe> */}
-        </div>
-        <div className={styles.chart}>
-        <iframe src="https://app.chartbrew.com/chart/84e5c586-6735-4774-b86c-b0791a6db85a/embedded" allowTransparency="true" width="100%" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
+          <iframe src="https://app.chartbrew.com/chart/6c0d0b7a-fcf9-42b0-8f4a-73433e38a90d/embedded" allowTransparency="true" width="700" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe> */}
+        {/* <iframe src="https://app.chartbrew.com/chart/034b2fcf-238d-4cc8-8144-124cabe0b82e/embedded" allowTransparency="true" width="700" height="300" scrolling="no" frameborder="0" style="background-color: #ffffff"></iframe> */}
+        {/* </div> */}
+        {/* <div className={styles.chart}>
+          <iframe src="https://app.chartbrew.com/chart/84e5c586-6735-4774-b86c-b0791a6db85a/embedded" allowTransparency="true" width="100%" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
           <iframe src="https://app.chartbrew.com/chart/2cc045f0-7c20-49a1-a94b-f8868d2af116/embedded" allowTransparency="true" width="100%" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
-        </div>
+        </div> */}
 
       </div>
     </>
