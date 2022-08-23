@@ -9,6 +9,7 @@ import styles from "./styles/style.module.css";
 import {
   getReportByTournamentIdAPI,
   getReportFromHostByTournamentIdAPI,
+  getReportTeamOutTournamentAPI,
 } from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
 import { cancelTournamentAPI } from "../../api/TournamentAPI";
@@ -16,6 +17,13 @@ import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
 import { toast } from "react-toastify";
 import { changStatusReport } from "../../utils/ChangeStatusReport";
+import { async } from "@firebase/util";
+import {
+  reportOutTeam,
+  updateNextTeamInNextRound,
+} from "../../api/TeamInMatchAPI";
+import getInfoTeamInTournamentByTeamId from "../../api/TeamInTournamentAPI";
+import createTieBreakAPI from "../../api/MatchAPI";
 function TourDetail() {
   const { idTour } = useParams();
   const [tournament, setTournament] = useState([]);
@@ -29,6 +37,7 @@ function TourDetail() {
   const [currentPage, setCurrentPage] = useState(1);
   const [report, setReport] = useState(null);
   const [reportFromHost, setReportFromHost] = useState(null);
+  const [reportTeamOutTournament, setReportTeamOutTournament] = useState(null);
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -127,11 +136,24 @@ function TourDetail() {
     getTournament();
     getTeam();
     getReportFromHostByHostId();
+    getReportTeamOutTournament();
   }, []);
-
   useEffect(() => {
     getReportByTourID();
   }, [currentPage]);
+
+  const getReportTeamOutTournament = async () => {
+    try {
+      const response = await getReportTeamOutTournamentAPI(idTour);
+      if (response.status === 200) {
+        if (response.data.reports.length > 0) {
+          setReportTeamOutTournament(response.data.reports);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
@@ -155,7 +177,6 @@ function TourDetail() {
 
       if (response.status === 200) {
         setReport(response.data);
-        
       }
     } catch (err) {
       console.error(err);
@@ -223,7 +244,6 @@ function TourDetail() {
     }
   };
   const takeFlagForHost = async () => {
-    
     try {
       const data = {
         ...host,
@@ -237,7 +257,7 @@ function TourDetail() {
         setLoading(true);
         getReportFromHostByHostId();
         setCurrentPage(1);
-        getReportByTourID()
+        getReportByTourID();
         toast.success("Gắn cờ giải đấu thành công", {
           position: "top-right",
           autoClose: 3000,
@@ -254,6 +274,74 @@ function TourDetail() {
   };
   const changeStatusReportTournament = async () => {
     await changStatusReport([...report.reports, ...reportFromHost.reports]);
+  };
+  const excuteOutTournament = async (data) => {
+    setLoading(true);
+    try {
+      const teamInTourId = await findTeamInTournamentByTeamId(data.team.id);
+      const response = await reportOutTeam(teamInTourId);
+      if (response.status === 200) {
+        const flagTieBreak = await createTieBreak(response.data);
+        if (flagTieBreak === false)
+          await updateNextTeamInTournament(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
+  const createTieBreak = async (data) => {
+    try {
+      const response = await createTieBreakAPI(
+        idTour,
+        tournament === 2
+          ? null
+          : data.groupFight.includes("Bảng") && !data.groupFight.includes("tiebreak")
+          ? data.groupFight.split(" ")[1]
+          : null
+      );
+      if (response.status === 200) {
+        return true;
+      }
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
+  const updateNextTeamInTournament = async (data) => {
+    try {
+      const dataBody = {
+        tournamentId: idTour,
+        matchId:
+          tournament.tournamentTypeId === 2 ||
+          dataBody.groupFight.includes("Bảng")
+            ? 0
+            : data.matchId,
+        groupName:
+          tournament.tournamentTypeId !== 2 ||
+          dataBody.groupFight.includes("Bảng")
+            ? dataBody.groupFight.split(" ")[1]
+            : "",
+      };
+      const response = await updateNextTeamInNextRound(dataBody);
+      if (response.status === 200) {
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
+  const findTeamInTournamentByTeamId = async (id) => {
+    try {
+      const response = await getInfoTeamInTournamentByTeamId(id);
+      if (response.status === 200) {
+        return response.data.teamInTournaments[0].id;
+      }
+    } catch (err) {
+      setLoading(false);
+      console.error(err);
+    }
   };
   return (
     <>
@@ -543,6 +631,61 @@ function TourDetail() {
             </Link>
           </div>
         </div>
+
+        <div className={styles.wrapReport}>
+          <h2>Thông tin đội bóng muốn thoát khỏi giải</h2>
+          {reportTeamOutTournament !== null ? (
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th scope="col">Đội bóng</th>
+                  <th scope="col">Lí do</th>
+                  <th scope="col">Nội dung lí do</th>
+                  <th scope="col">Ngày báo cáo</th>
+                  <th scope="col">Xóa khỏi giải</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportTeamOutTournament.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <img
+                          style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: "50%",
+                          }}
+                          src={item.team.teamAvatar}
+                        />{" "}
+                        {item.team.teamName}
+                      </td>
+                      <td>{item.status}</td>
+                      <td>{item.reason}</td>
+                      <td>{changeDate(item.dateReport)}</td>
+                      <td>
+                        <button
+                          style={{
+                            padding: 10,
+                          }}
+                          onClick={() => {
+                            excuteOutTournament(item);
+                          }}
+                        >
+                          Xóa đội
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : (
+            <h1>Chưa có đội bóng muốn rời giải đấu</h1>
+          )}
+          <div></div>
+        </div>
+
         <div className={styles.wrapReport}>
           <h2>Thông tin hủy giải từ chủ giải đấu</h2>
           {reportFromHost !== null && reportFromHost.reports.length > 0 ? (
