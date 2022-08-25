@@ -93,8 +93,8 @@ function Dashboard() {
             </div>
           </div>
         </div> */}
-
-        <iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/a9dc5cdb-3bee-4a16-9379-758954d027fa/page/tWDGB" frameborder="0" allowfullscreen></iframe>
+        <iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/d4c715c8-4b09-4cba-a116-cd70e7ba6493/page/tWDGB" frameborder="0" allowfullscreen></iframe>
+        {/* <iframe width="100%" height="600" src="https://datastudio.google.com/embed/reporting/a9dc5cdb-3bee-4a16-9379-758954d027fa/page/tWDGB" frameborder="0" allowfullscreen></iframe> */}
         {/* <div className={styles.chart1}>
           <iframe src="https://app.chartbrew.com/chart/2eaf86b8-5658-4a01-85ab-47a5161ac173/embedded" allowTransparency="true" width="420" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe>
           <iframe src="https://app.chartbrew.com/chart/6c0d0b7a-fcf9-42b0-8f4a-73433e38a90d/embedded" allowTransparency="true" width="700" height="300" scrolling="no" frameborder="0" className={styles.itemchart}></iframe> */}
