@@ -11,6 +11,7 @@ function ManagePlayer() {
 
     const [loading, setloading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [statePage, setStagePage] = useState(0);
     const [count, setCount] = useState(0);
     const [check, setCheck] = useState(false);
     const [contentSearch, setContentSearch] = useState("");
@@ -23,6 +24,7 @@ function ManagePlayer() {
   
     const handlePageClick = (data) => {
       setCurrentPage(data.selected + 1);
+      setStagePage(data.selected);
       getPlayer(contentSearch, data.selected + 1, "NAME", contentSearch);
       setCheck(!check);
     };
@@ -62,6 +64,7 @@ function ManagePlayer() {
   
     const onSubmitHandler = (e) => {
       e.preventDefault();
+      setStagePage(0);
       setCurrentPage(1);
       getPlayer(contentSearch, currentPage, "NAME", contentSearch);
       setCheck(!check);
@@ -205,6 +208,7 @@ function ManagePlayer() {
               breakClassName={styles.pageItem}
               breakLinkClassName={styles.pagelink}
               pageRangeDisplayed={2}
+              forcePage={statePage}
               className={styles.pagingTournament}
             />
           </div>
