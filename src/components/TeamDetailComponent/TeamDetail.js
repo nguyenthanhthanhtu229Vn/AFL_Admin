@@ -9,6 +9,7 @@ import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
 import { getReportByTeamIdAPI } from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
+import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
@@ -121,6 +122,27 @@ function TeamDetail() {
     );
   };
 
+  const HandleClick = () => {
+    Swal.fire({
+      title: "Bạn chắc chứ?",
+      text: "Đánh cờ đội bóng này",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5fe37d",
+      cancelButtonColor: "#b80e4e",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      customClass: {
+        icon: styles.no_before_icon,
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        takeFlagForHost();
+      }
+    });
+  };
+
   // format DateTime
   const formatDateTime = (date) => {
     const day = new Date(date);
@@ -207,7 +229,7 @@ function TeamDetail() {
               <div className={styles.function}>
                 <a
                   onClick={() => {
-                    takeFlagForHost();
+                    HandleClick();
                   }}
                 >
                   Đánh cờ đội bóng

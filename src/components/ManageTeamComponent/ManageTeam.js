@@ -11,6 +11,7 @@ function ManageTeam() {
 
   const [loading, setloading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [stagePage, setStagePage] = useState(0);
   const [count, setCount] = useState(0);
   const [check, setCheck] = useState(false);
   const [contentSearch, setContentSearch] = useState("");
@@ -23,6 +24,7 @@ function ManageTeam() {
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
+    setStagePage(data.selected);
     getTeam(contentSearch, data.selected + 1, "NAME", contentSearch);
     setCheck(!check);
   };
@@ -62,6 +64,7 @@ function ManageTeam() {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     setCurrentPage(1);
+    setStagePage(0);
     getTeam(contentSearch, currentPage, "NAME", contentSearch);
     setCheck(!check);
   };
@@ -204,6 +207,7 @@ function ManageTeam() {
             breakClassName={styles.pageItem}
             breakLinkClassName={styles.pagelink}
             pageRangeDisplayed={2}
+            forcePage={stagePage}
             className={styles.pagingTournament}
           />
         </div>

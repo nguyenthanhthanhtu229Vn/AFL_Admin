@@ -384,3 +384,21 @@
 .contentWarning{
   font-size: 18px;
 }
+
+.btnDel{
+  width: 100%;
+  display: block;
+  background-color: #d9105c;
+  padding: 20px 10px;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: 5px;
+  color: var(--white-text);
+  font-family: "Mulish-Regular";
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btnDel:hover{
+  filter: brightness(90%);
+}

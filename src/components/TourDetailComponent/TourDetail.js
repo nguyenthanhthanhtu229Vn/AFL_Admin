@@ -6,6 +6,7 @@ import LoadingAction from "../LoadingComponent/LoadingAction";
 import LoadingCircle from "../LoadingComponent/LoadingCircle";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import styles from "./styles/style.module.css";
+import Swal from "sweetalert2";
 import {
   getReportByTournamentIdAPI,
   getReportFromHostByTournamentIdAPI,
@@ -230,6 +231,48 @@ function TourDetail() {
     return a;
   };
 
+  const HandleClickDel = (item) => {
+    Swal.fire({
+      title: "Bạn chắc chứ?",
+      text: "Xóa đội này ra khỏi giải",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5fe37d",
+      cancelButtonColor: "#b80e4e",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      customClass: {
+        icon: styles.no_before_icon,
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(item)
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        excuteOutTournament(item);
+      }
+    });
+  };
+
+  const HandleClick = () => {
+    Swal.fire({
+      title: "Bạn chắc chứ?",
+      text: "Hủy giải đấu này",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5fe37d",
+      cancelButtonColor: "#b80e4e",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      customClass: {
+        icon: styles.no_before_icon,
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        cancleTournament();
+      }
+    });
+  };
   const cancleTournament = async () => {
     setLoading(false);
     await changeStatusReportTournament();
@@ -277,6 +320,7 @@ function TourDetail() {
   };
   const excuteOutTournament = async (data) => {
     setLoading(true);
+    console.log(data)
     try {
       const teamInTourId = await findTeamInTournamentByTeamId(data.team.id);
       const response = await reportOutTeam(teamInTourId);
@@ -345,8 +389,13 @@ function TourDetail() {
   };
   const findTeamInTournamentByTeamId = async (id) => {
     try {
+<<<<<<< HEAD
       const response = await getInfoTeamInTournamentByTeamId(id, idTour);
+=======
+      const response = await getInfoTeamInTournamentByTeamId(idTour,id);
+>>>>>>> 94aee841e84e3050b9a222f19c2b52c2a2c7d9c0
       if (response.status === 200) {
+        console.log(response.data.teamInTournaments[0].id)
         return response.data.teamInTournaments[0].id;
       }
     } catch (err) {
@@ -396,7 +445,7 @@ function TourDetail() {
                 <div className={styles.function}>
                   <a
                     onClick={() => {
-                      cancleTournament();
+                      HandleClick();
                     }}
                   >
                     Hủy giải đấu
@@ -650,7 +699,7 @@ function TourDetail() {
               <thead>
                 <tr>
                   <th scope="col">Đội bóng</th>
-                  <th scope="col">Lí do</th>
+                  {/* <th scope="col">Lí do</th> */}
                   <th scope="col">Nội dung lí do</th>
                   <th scope="col">Ngày báo cáo</th>
                   <th scope="col">Xóa khỏi giải</th>
@@ -671,16 +720,14 @@ function TourDetail() {
                         />{" "}
                         {item.team.teamName}
                       </td>
-                      <td>{item.status}</td>
+                      {/* <td>{item.status}</td> */}
                       <td>{item.reason}</td>
                       <td>{changeDate(item.dateReport)}</td>
                       <td>
                         <button
-                          style={{
-                            padding: 10,
-                          }}
+                          className={styles.btnDel}
                           onClick={() => {
-                            excuteOutTournament(item);
+                            HandleClickDel(item);
                           }}
                         >
                           Xóa đội
