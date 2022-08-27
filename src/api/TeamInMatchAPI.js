@@ -6,7 +6,7 @@ export function reportOutTeam(id) {
   return axios.put(url + afterDefaultURL);
 }
 
-export function updateNextTeamInNextRound (data) {
-    const afterDefaultURL = `TeamInMatch/update-next-team-in-match`;
-    return axios.put(url + afterDefaultURL);
-  }
+export function updateNextTeamInNextRound(data) {
+  const afterDefaultURL = `TeamInMatch/update-next-team-in-match`;
+  return axios.put(url + afterDefaultURL, data);
+}

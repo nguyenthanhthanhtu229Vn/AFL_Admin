@@ -246,7 +246,7 @@ function TourDetail() {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(item)
+        console.log(item);
         // Swal.fire("Deleted!", "Your file has been deleted.", "success");
         excuteOutTournament(item);
       }
@@ -320,14 +320,17 @@ function TourDetail() {
   };
   const excuteOutTournament = async (data) => {
     setLoading(true);
-    console.log(data)
+    console.log(data);
     try {
       const teamInTourId = await findTeamInTournamentByTeamId(data.team.id);
       const response = await reportOutTeam(teamInTourId);
       if (response.status === 200) {
         console.log(response.data);
         if (response.data.status) {
-          if (!response.data.groupFight.includes("tie-break")) {
+          if (
+            !response.data.groupFight.includes("tie-break") &&
+            response.data.groupFight.includes("Bảng")
+          ) {
             const flagTieBreak = await createTieBreak(response.data);
             if (flagTieBreak === false)
               await updateNextTeamInTournament(response.data);
@@ -366,17 +369,14 @@ function TourDetail() {
   const updateNextTeamInTournament = async (data) => {
     try {
       const dataBody = {
-        tournamentId: idTour,
+        tournamentId: +idTour,
         matchId:
-          tournament.tournamentTypeId === 2 ||
-          dataBody.groupFight.includes("Bảng")
+          tournament.tournamentTypeId === 2 || data.groupFight.includes("Bảng")
             ? 0
             : data.matchId,
-        groupName:
-          tournament.tournamentTypeId !== 2 ||
-          dataBody.groupFight.includes("Bảng")
-            ? dataBody.groupFight.split(" ")[1]
-            : "",
+        groupName: data.groupFight.includes("Bảng")
+          ? data.groupFight.split(" ")[1]
+          : "",
       };
       const response = await updateNextTeamInNextRound(dataBody);
       if (response.status === 200) {
@@ -389,13 +389,10 @@ function TourDetail() {
   };
   const findTeamInTournamentByTeamId = async (id) => {
     try {
-<<<<<<< HEAD
-      const response = await getInfoTeamInTournamentByTeamId(id, idTour);
-=======
-      const response = await getInfoTeamInTournamentByTeamId(idTour,id);
->>>>>>> 94aee841e84e3050b9a222f19c2b52c2a2c7d9c0
+      const response = await getInfoTeamInTournamentByTeamId(idTour, id);
+
       if (response.status === 200) {
-        console.log(response.data.teamInTournaments[0].id)
+        console.log(response.data.teamInTournaments[0].id);
         return response.data.teamInTournaments[0].id;
       }
     } catch (err) {
