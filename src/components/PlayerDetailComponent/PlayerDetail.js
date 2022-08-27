@@ -12,6 +12,7 @@ import { getReportByFootballPlayerIdAPI } from "../../api/ReportAPI";
 import ReactPaginate from "react-paginate";
 import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
+import Swal from "sweetalert2";
 import { changStatusReport } from "../../utils/ChangeStatusReport";
 function PlayerDetail() {
   const { idPlayer } = useParams();
@@ -24,6 +25,27 @@ function PlayerDetail() {
   const [limit, setLimit] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
   const [report, setReport] = useState(null);
+
+  const HandleClick = () => {
+    Swal.fire({
+      title: "Bạn chắc chứ?",
+      text: "Đánh cờ cầu thủ này",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5fe37d",
+      cancelButtonColor: "#b80e4e",
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+      customClass: {
+        icon: styles.no_before_icon,
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        takeFlagForHost();
+      }
+    });
+  };
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -232,7 +254,7 @@ function PlayerDetail() {
                 <div className={styles.function}>
                   <a
                     onClick={() => {
-                      takeFlagForHost();
+                     HandleClick();
                     }}
                   >
                     Đánh cờ cầu thủ

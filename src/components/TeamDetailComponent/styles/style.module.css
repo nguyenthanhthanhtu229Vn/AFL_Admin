@@ -336,3 +336,6 @@
 .contentWarning{
   font-size: 18px;
 }
+.no_before_icon::before {
+  display: none !important;
+}
