@@ -281,9 +281,18 @@ function TourDetail() {
       const teamInTourId = await findTeamInTournamentByTeamId(data.team.id);
       const response = await reportOutTeam(teamInTourId);
       if (response.status === 200) {
-        const flagTieBreak = await createTieBreak(response.data);
-        if (flagTieBreak === false)
-          await updateNextTeamInTournament(response.data);
+        console.log(response.data);
+        if (response.data.status) {
+          if (!response.data.groupFight.includes("tie-break")) {
+            const flagTieBreak = await createTieBreak(response.data);
+            if (flagTieBreak === false)
+              await updateNextTeamInTournament(response.data);
+          } else {
+            await updateNextTeamInTournament(response.data);
+          }
+        } else {
+          setLoading(false);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -296,11 +305,13 @@ function TourDetail() {
         idTour,
         tournament === 2
           ? null
-          : data.groupFight.includes("Bảng") && !data.groupFight.includes("tiebreak")
+          : data.groupFight.includes("Bảng") &&
+            !data.groupFight.includes("tiebreak")
           ? data.groupFight.split(" ")[1]
           : null
       );
       if (response.status === 200) {
+        setLoading(false);
         return true;
       }
     } catch (err) {
@@ -334,7 +345,7 @@ function TourDetail() {
   };
   const findTeamInTournamentByTeamId = async (id) => {
     try {
-      const response = await getInfoTeamInTournamentByTeamId(id);
+      const response = await getInfoTeamInTournamentByTeamId(id, idTour);
       if (response.status === 200) {
         return response.data.teamInTournaments[0].id;
       }
