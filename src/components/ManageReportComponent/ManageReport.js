@@ -569,10 +569,6 @@ function ManageReport() {
                   listReport.map((item, index) => (
                     <div className={styles.item} key={index}>
                       <div
-                        style={{
-                          padding: "20px 0px",
-                          alignItems: "center",
-                        }}
                         className={styles.left}
                       >
                         <img
@@ -598,7 +594,15 @@ function ManageReport() {
                         }}
                         className={styles.mid}
                       >
-                        <Link to={`/accountDetail/${item.userId}`}>
+                        <Link
+                          to={
+                            reportType === "FootballPlayer"
+                              ? `/playerDetail/${item.footballPlayerReportVM.id}`
+                              : reportType === "Team"
+                              ? `/teamDetail/${item.teamReportVM.id}`
+                              : `/tourDetail/${item.tournamentReportVM.id}`
+                          }
+                        >
                           <h3>
                             {reportType === "FootballPlayer"
                               ? item.footballPlayerReportVM.playerName

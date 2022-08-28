@@ -216,7 +216,7 @@ input:checked + label::after {
 
 .item {
   display: flex;
-  justify-content: space-between;
+  column-gap: 20px;
   height: 100%;
   position: relative;
   margin-bottom: 30px;
@@ -613,4 +613,8 @@ line-height: 1.1;
 
 .no_before_icon::before {
   display: none !important;
+}
+
+.left{
+  margin-bottom: 20px;
 }
