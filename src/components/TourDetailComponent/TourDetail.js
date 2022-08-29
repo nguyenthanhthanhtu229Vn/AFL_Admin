@@ -39,6 +39,7 @@ function TourDetail() {
   const [report, setReport] = useState(null);
   const [reportFromHost, setReportFromHost] = useState(null);
   const [reportTeamOutTournament, setReportTeamOutTournament] = useState(null);
+  const [check,setCheck]=useState(true)
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -138,7 +139,7 @@ function TourDetail() {
     getTeam();
     getReportFromHostByHostId();
     getReportTeamOutTournament();
-  }, []);
+  }, [check]);
   useEffect(() => {
     getReportByTourID();
   }, [currentPage]);
@@ -485,14 +486,11 @@ function TourDetail() {
                   <div className={styles.function}>
                     {" "}
                     <a
-                      
                       style={{
                         backgroundColor: "transparent",
-                        cursor: "default"
+                        cursor: "default",
                       }}
-                    >
-                      
-                    </a>
+                    ></a>
                   </div>
                 )
               ) : (
@@ -738,6 +736,12 @@ function TourDetail() {
 
         <div className={styles.wrapReport}>
           <h2>Thông tin đội bóng muốn thoát khỏi giải</h2>
+          <i
+            class="fa-solid fa-arrow-rotate-right"
+            onClick={() => {
+              setCheck(!check);
+            }}
+          ></i>
           {reportTeamOutTournament !== null ? (
             <table className={styles.table}>
               <thead>
