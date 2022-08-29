@@ -149,7 +149,6 @@ function TourDetail() {
       if (response.status === 200) {
         if (response.data.reports.length > 0) {
           setReportTeamOutTournament(response.data.reports);
-          
         }
         setLoading(false);
       }
@@ -424,7 +423,6 @@ function TourDetail() {
       const response = await getInfoTeamInTournamentByTeamId(idTour, id);
 
       if (response.status === 200) {
-        
         return response.data.teamInTournaments[0].id;
       }
     } catch (err) {
@@ -470,7 +468,9 @@ function TourDetail() {
           <div>
             <div className={styles.content__left}>
               <img src={tournament.tournamentAvatar} alt="khoa" />
-              {tournament.status === true ? (
+              {tournament.status === true &&
+              (reportFromHost.reports.length > 0 ||
+                report.reports.length >= 10) ? (
                 <div className={styles.function}>
                   <a
                     onClick={() => {

@@ -99,7 +99,6 @@ function TeamDetail() {
 
       if (response.status === 200) {
         setReport(response.data);
-        
       }
     } catch (err) {
       console.error(err);
@@ -226,15 +225,18 @@ function TeamDetail() {
           <div>
             <div className={styles.content__left}>
               <img src={team.teamAvatar} alt={team.teamName} />
-              <div className={styles.function}>
-                <a
-                  onClick={() => {
-                    HandleClick();
-                  }}
-                >
-                  Đánh cờ đội bóng
-                </a>
-              </div>
+              {report !== null && report.reports.length >= 10 ? (
+                <div className={styles.function}>
+                  <a
+                    onClick={() => {
+                      HandleClick();
+                    }}
+                  >
+                    Đánh cờ đội bóng
+                  </a>
+                </div>
+              ) : null}
+
               {manager !== null && manager.flagReportTeam >= 3 ? (
                 manager.status === true ? (
                   <FlagUserComponet user={manager} getUserById={getUserById} />
@@ -261,14 +263,8 @@ function TeamDetail() {
                 )
               ) : (
                 <div>
-                  <h1
-                     className={styles.titleWarning}
-                  >
-                    Cảnh báo
-                  </h1>
-                  <p
-                    className={styles.contentWarning}
-                  >
+                  <h1 className={styles.titleWarning}>Cảnh báo</h1>
+                  <p className={styles.contentWarning}>
                     Khi chủ đội bóng bị dánh cờ nhiều hơn 3 lần, chặn tài khoản
                     sẽ xuất hiện
                   </p>

@@ -251,15 +251,17 @@ function PlayerDetail() {
             <div className={styles.content__left}>
               <img src={player.playerAvatar} alt={player.playerName} />
               <div className={styles.function}>
-                <div className={styles.function}>
-                  <a
-                    onClick={() => {
-                     HandleClick();
-                    }}
-                  >
-                    Đánh cờ cầu thủ
-                  </a>
-                </div>
+                {report !== null && report.reports.length >= 10 ? (
+                  <div className={styles.function}>
+                    <a
+                      onClick={() => {
+                        HandleClick();
+                      }}
+                    >
+                      Đánh cờ cầu thủ
+                    </a>
+                  </div>
+                ) : null}
               </div>
               {manager !== null && manager.flagReportFootballPlayer >= 3 ? (
                 manager.status === true ? (
