@@ -149,7 +149,9 @@ function TourDetail() {
       if (response.status === 200) {
         if (response.data.reports.length > 0) {
           setReportTeamOutTournament(response.data.reports);
+          
         }
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
@@ -318,14 +320,19 @@ function TourDetail() {
   const changeStatusReportTournament = async () => {
     await changStatusReport([...report.reports, ...reportFromHost.reports]);
   };
+
+  const changeStatusReportTeamOutTournament = async () => {
+    await changStatusReport([...reportTeamOutTournament]);
+  };
+
   const excuteOutTournament = async (data) => {
     setLoading(true);
-    console.log(data);
+    await changeStatusReportTeamOutTournament();
+    setReportTeamOutTournament(null);
     try {
       const teamInTourId = await findTeamInTournamentByTeamId(data.team.id);
       const response = await reportOutTeam(teamInTourId);
       if (response.status === 200) {
-        console.log(response.data);
         if (response.data.status) {
           if (
             !response.data.groupFight.includes("tie-break") &&
@@ -334,11 +341,40 @@ function TourDetail() {
             const flagTieBreak = await createTieBreak(response.data);
             if (flagTieBreak === false)
               await updateNextTeamInTournament(response.data);
+            await getReportTeamOutTournament();
+            toast.success("Đội bóng bị kick khỏi giải thành công", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           } else {
             await updateNextTeamInTournament(response.data);
+            await getReportTeamOutTournament();
+            toast.success("Đội bóng bị kick khỏi giải thành công", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           }
         } else {
-          setLoading(false);
+          await getReportTeamOutTournament();
+          toast.success("Đội bóng bị kick khỏi giải thành công", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       }
     } catch (err) {
@@ -358,7 +394,6 @@ function TourDetail() {
           : null
       );
       if (response.status === 200) {
-        setLoading(false);
         return true;
       }
     } catch (err) {
@@ -379,9 +414,6 @@ function TourDetail() {
           : "",
       };
       const response = await updateNextTeamInNextRound(dataBody);
-      if (response.status === 200) {
-        setLoading(false);
-      }
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -392,7 +424,7 @@ function TourDetail() {
       const response = await getInfoTeamInTournamentByTeamId(idTour, id);
 
       if (response.status === 200) {
-        console.log(response.data.teamInTournaments[0].id);
+        
         return response.data.teamInTournaments[0].id;
       }
     } catch (err) {
