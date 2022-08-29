@@ -468,18 +468,33 @@ function TourDetail() {
           <div>
             <div className={styles.content__left}>
               <img src={tournament.tournamentAvatar} alt="khoa" />
-              {tournament.status === true &&
-              (reportFromHost.reports.length > 0 ||
-                report.reports.length >= 10) ? (
-                <div className={styles.function}>
-                  <a
-                    onClick={() => {
-                      HandleClick();
-                    }}
-                  >
-                    Hủy giải đấu
-                  </a>
-                </div>
+              {tournament.status === true ? (
+                (reportFromHost !== null &&
+                  reportFromHost.reports.length > 0) ||
+                (report !== null && report.reports.length >= 10) ? (
+                  <div className={styles.function}>
+                    <a
+                      onClick={() => {
+                        HandleClick();
+                      }}
+                    >
+                      Hủy giải đấu
+                    </a>
+                  </div>
+                ) : (
+                  <div className={styles.function}>
+                    {" "}
+                    <a
+                      
+                      style={{
+                        backgroundColor: "transparent",
+                        cursor: "default"
+                      }}
+                    >
+                      
+                    </a>
+                  </div>
+                )
               ) : (
                 <div className={styles.function}>
                   <a
