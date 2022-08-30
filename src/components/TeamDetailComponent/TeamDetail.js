@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
 import { changStatusReport } from "../../utils/ChangeStatusReport";
+import { postNotification } from "../../api/Notification";
 function TeamDetail() {
   const { idTeam } = useParams();
   const [team, setTeam] = useState([]);
@@ -160,6 +161,21 @@ function TeamDetail() {
   const changeStatusReportTeam = async () => {
     await changStatusReport([...report.reports]);
   };
+  const postNotificateForUser = async () => {
+    try {
+      const data = {
+        content: "Cảnh báo đánh cờ vì bị nhiều báo cáo",
+        forAdmin: false,
+        userId: manager.id,
+        tournamentId: 0,
+        teamId: 0,
+        footballPlayerId: 0,
+      };
+      const response = await postNotification(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const takeFlagForHost = async () => {
     await changeStatusReportTeam();
     try {
@@ -183,6 +199,7 @@ function TeamDetail() {
           draggable: true,
           progress: undefined,
         });
+        await postNotificateForUser();
       }
     } catch (err) {
       console.error(err);

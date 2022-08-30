@@ -25,6 +25,7 @@ import {
 } from "../../api/TeamInMatchAPI";
 import getInfoTeamInTournamentByTeamId from "../../api/TeamInTournamentAPI";
 import createTieBreakAPI from "../../api/MatchAPI";
+import { postNotification } from "../../api/Notification";
 function TourDetail() {
   const { idTour } = useParams();
   const [tournament, setTournament] = useState([]);
@@ -39,7 +40,7 @@ function TourDetail() {
   const [report, setReport] = useState(null);
   const [reportFromHost, setReportFromHost] = useState(null);
   const [reportTeamOutTournament, setReportTeamOutTournament] = useState(null);
-  const [check,setCheck]=useState(true)
+  const [check, setCheck] = useState(true);
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -312,11 +313,29 @@ function TourDetail() {
           draggable: true,
           progress: undefined,
         });
+        await postNotificateForUser();
       }
     } catch (err) {
       console.error(err);
     }
   };
+
+  const postNotificateForUser = async () => {
+    try {
+      const data = {
+        content: "Cảnh báo đánh cờ vì bị nhiều báo cáo",
+        forAdmin: false,
+        userId: host.id,
+        tournamentId: 0,
+        teamId: 0,
+        footballPlayerId: 0,
+      };
+      const response = await postNotification(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const changeStatusReportTournament = async () => {
     await changStatusReport([...report.reports, ...reportFromHost.reports]);
   };

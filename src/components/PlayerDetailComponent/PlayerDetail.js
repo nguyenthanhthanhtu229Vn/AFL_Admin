@@ -14,6 +14,7 @@ import { takeFlagForUserAPI } from "../../api/UserAPI";
 import FlagUserComponet from "../FlagUserComponent";
 import Swal from "sweetalert2";
 import { changStatusReport } from "../../utils/ChangeStatusReport";
+import { postNotification } from "../../api/Notification";
 function PlayerDetail() {
   const { idPlayer } = useParams();
   const [player, setPlayer] = useState([]);
@@ -116,6 +117,22 @@ function PlayerDetail() {
       day.getFullYear()
     );
   };
+
+  const postNotificateForUser = async () => {
+    try {
+      const data = {
+        content: "Cảnh báo đánh cờ vì bị nhiều báo cáo",
+        forAdmin: false,
+        userId: manager.id,
+        tournamentId: 0,
+        teamId: 0,
+        footballPlayerId: 0,
+      };
+      const response = await postNotification(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const changeStatusReportTeam = async () => {
     await changStatusReport([...report.reports]);
   };
@@ -142,6 +159,7 @@ function PlayerDetail() {
           draggable: true,
           progress: undefined,
         });
+        await postNotificateForUser();
       }
     } catch (err) {
       console.error(err);
