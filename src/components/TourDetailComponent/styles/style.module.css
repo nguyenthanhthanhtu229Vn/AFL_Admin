@@ -251,6 +251,7 @@
   background-color: var(--blue-black);
   margin-top: 30px;
   padding: 20px;
+  position: relative;
 }
 
 .wrapReport h2 {
@@ -401,4 +402,11 @@
 
 .btnDel:hover{
   filter: brightness(90%);
+}
+
+.wrapReport i{
+  cursor: pointer;
+  position: absolute;
+  right: 40px;
+  top: 20px;
 }

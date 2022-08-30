@@ -565,7 +565,7 @@ function ManageReport() {
                 ></i>
               </div>
               <div className={styles.list}>
-                {listReport !== null ? (
+                {listReport !== null && listReport.length > 0 ? (
                   listReport.map((item, index) => (
                     <div className={styles.item} key={index}>
                       <div

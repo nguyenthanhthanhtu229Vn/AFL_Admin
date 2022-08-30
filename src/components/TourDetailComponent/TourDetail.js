@@ -39,6 +39,7 @@ function TourDetail() {
   const [report, setReport] = useState(null);
   const [reportFromHost, setReportFromHost] = useState(null);
   const [reportTeamOutTournament, setReportTeamOutTournament] = useState(null);
+  const [check,setCheck]=useState(true)
   const infiniteScroll = (event) => {
     if (
       height.scrollHeight - Math.round(height.scrollTop) ===
@@ -138,7 +139,7 @@ function TourDetail() {
     getTeam();
     getReportFromHostByHostId();
     getReportTeamOutTournament();
-  }, []);
+  }, [check]);
   useEffect(() => {
     getReportByTourID();
   }, [currentPage]);
@@ -150,6 +151,7 @@ function TourDetail() {
         if (response.data.reports.length > 0) {
           setReportTeamOutTournament(response.data.reports);
         }
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
@@ -318,14 +320,19 @@ function TourDetail() {
   const changeStatusReportTournament = async () => {
     await changStatusReport([...report.reports, ...reportFromHost.reports]);
   };
+
+  const changeStatusReportTeamOutTournament = async () => {
+    await changStatusReport([...reportTeamOutTournament]);
+  };
+
   const excuteOutTournament = async (data) => {
     setLoading(true);
-    console.log(data);
+    await changeStatusReportTeamOutTournament();
+    setReportTeamOutTournament(null);
     try {
       const teamInTourId = await findTeamInTournamentByTeamId(data.team.id);
       const response = await reportOutTeam(teamInTourId);
       if (response.status === 200) {
-        console.log(response.data);
         if (response.data.status) {
           if (
             !response.data.groupFight.includes("tie-break") &&
@@ -334,11 +341,40 @@ function TourDetail() {
             const flagTieBreak = await createTieBreak(response.data);
             if (flagTieBreak === false)
               await updateNextTeamInTournament(response.data);
+            await getReportTeamOutTournament();
+            toast.success("Đội bóng bị kick khỏi giải thành công", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           } else {
             await updateNextTeamInTournament(response.data);
+            await getReportTeamOutTournament();
+            toast.success("Đội bóng bị kick khỏi giải thành công", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           }
         } else {
-          setLoading(false);
+          await getReportTeamOutTournament();
+          toast.success("Đội bóng bị kick khỏi giải thành công", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       }
     } catch (err) {
@@ -358,7 +394,6 @@ function TourDetail() {
           : null
       );
       if (response.status === 200) {
-        setLoading(false);
         return true;
       }
     } catch (err) {
@@ -379,9 +414,6 @@ function TourDetail() {
           : "",
       };
       const response = await updateNextTeamInNextRound(dataBody);
-      if (response.status === 200) {
-        setLoading(false);
-      }
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -392,7 +424,6 @@ function TourDetail() {
       const response = await getInfoTeamInTournamentByTeamId(idTour, id);
 
       if (response.status === 200) {
-        console.log(response.data.teamInTournaments[0].id);
         return response.data.teamInTournaments[0].id;
       }
     } catch (err) {
@@ -439,15 +470,29 @@ function TourDetail() {
             <div className={styles.content__left}>
               <img src={tournament.tournamentAvatar} alt="khoa" />
               {tournament.status === true ? (
-                <div className={styles.function}>
-                  <a
-                    onClick={() => {
-                      HandleClick();
-                    }}
-                  >
-                    Hủy giải đấu
-                  </a>
-                </div>
+                (reportFromHost !== null &&
+                  reportFromHost.reports.length > 0) ||
+                (report !== null && report.reports.length >= 10) ? (
+                  <div className={styles.function}>
+                    <a
+                      onClick={() => {
+                        HandleClick();
+                      }}
+                    >
+                      Hủy giải đấu
+                    </a>
+                  </div>
+                ) : (
+                  <div className={styles.function}>
+                    {" "}
+                    <a
+                      style={{
+                        backgroundColor: "transparent",
+                        cursor: "default",
+                      }}
+                    ></a>
+                  </div>
+                )
               ) : (
                 <div className={styles.function}>
                   <a
@@ -691,6 +736,12 @@ function TourDetail() {
 
         <div className={styles.wrapReport}>
           <h2>Thông tin đội bóng muốn thoát khỏi giải</h2>
+          <i
+            class="fa-solid fa-arrow-rotate-right"
+            onClick={() => {
+              setCheck(!check);
+            }}
+          ></i>
           {reportTeamOutTournament !== null ? (
             <table className={styles.table}>
               <thead>
