@@ -186,3 +186,8 @@
 .no_before_icon::before{
   display: none !important;
 }
+
+.accountList td:nth-child(2),
+.accountList th:nth-child(2){
+  text-align: left;
+}
