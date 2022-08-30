@@ -371,13 +371,7 @@ function ManagePromote() {
             >
               <i class="fa-solid fa-circle-exclamation"></i>Tất cả yêu cầu
             </div>
-            <p>Trạng thái</p>
-            <div className={styles.a}>
-              <span className={styles.green}></span>Đang trực tuyến
-            </div>
-            <div className={styles.a}>
-              <span className={styles.red}></span>Đang ngoại tuyến
-            </div>
+            <p></p>           
           </div>
           <div className={styles.content__right}>
             <form className={styles.search__bot} onSubmit={onSubmitHandler}>

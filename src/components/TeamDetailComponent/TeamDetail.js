@@ -403,7 +403,7 @@ function TeamDetail() {
         <div className={styles.wrapReport}>
           <h2>Thông tin báo cáo của đội bóng</h2>
 
-          {report !== null ? (
+          {report !== null && report.reports.length > 0 ? (
             <div>
               <table className={styles.table}>
                 <thead>
